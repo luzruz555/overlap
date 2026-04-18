@@ -2,1195 +2,632 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>합일사건 대응본부 | 공식 안내</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>합일사건 공동대응본부 | 공식 안내</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;700&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-/* ====================================================================
-   합일사건 대응본부 공식 안내 시스템
-   THE UNION — OFFICIAL RESPONSE BUREAU
-   ==================================================================== */
-
 :root {
-  --bg: #ececea;
-  --bg-panel: #f5f4f1;
-  --bg-deep: #dedbd4;
-  --ink: #1a1a1a;
-  --ink-soft: #4a4a4a;
-  --ink-faint: #8a8a86;
-  --line: #1a1a1a;
-  --line-soft: #b5b2aa;
-  --accent: #8b0000;
-  --accent-soft: #a52020;
-  --seal: #8b0000;
-  --warn: #8b0000;
-  --ok: #2d5016;
-  --stamp: #8b0000;
-
+  --bg: #ececea; --bg-panel: #f5f4f1; --bg-deep: #dedbd4;
+  --ink: #1a1a1a; --ink-soft: #4a4a4a; --ink-faint: #8a8a86;
+  --line: #1a1a1a; --line-soft: #b5b2aa;
+  --accent: #8b0000; --seal: #8b0000; --ok: #2d5016;
   --font-display: 'Noto Serif KR', 'Nanum Myeongjo', serif;
   --font-body: 'Noto Serif KR', serif;
   --font-mono: 'IBM Plex Mono', monospace;
 }
-
 [data-theme="dark"] {
-  --bg: #0d0d0b;
-  --bg-panel: #141412;
-  --bg-deep: #1a1a17;
-  --ink: #e8e6df;
-  --ink-soft: #a8a69f;
-  --ink-faint: #5a5a55;
-  --line: #e8e6df;
-  --line-soft: #2d2d29;
-  --accent: #c83c3c;
-  --accent-soft: #e04848;
-  --seal: #c83c3c;
-  --warn: #e04848;
-  --ok: #6ba84f;
-  --stamp: #c83c3c;
+  --bg: #0d0d0b; --bg-panel: #141412; --bg-deep: #1a1a17;
+  --ink: #e8e6df; --ink-soft: #a8a69f; --ink-faint: #5a5a55;
+  --line: #e8e6df; --line-soft: #2d2d29;
+  --accent: #c83c3c; --seal: #c83c3c; --ok: #6ba84f;
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-body);
-  line-height: 1.7;
-  min-height: 100vh;
-  overflow-x: hidden;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); line-height: 1.7;
+  min-height: 100vh; overflow-x: hidden;
   transition: background 0.4s, color 0.4s;
+  -webkit-text-size-adjust: 100%;
 }
-
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 3px);
-  pointer-events: none;
-  z-index: 1;
-  mix-blend-mode: multiply;
+  content: ''; position: fixed; inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 3px);
+  pointer-events: none; z-index: 1; mix-blend-mode: multiply;
 }
-
 [data-theme="dark"] body::before {
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 3px);
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 3px);
   mix-blend-mode: screen;
 }
 
-/* ==================== 인트로 슬라이드쇼 ==================== */
-
+/* ========== 인트로 ========== */
 #intro {
-  position: fixed;
-  inset: 0;
-  background: #0a0a08;
-  color: #e8e6df;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  overflow: hidden;
+  position: fixed; inset: 0; background: #0a0a08; color: #e8e6df;
+  z-index: 9999; display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 2rem; overflow: hidden;
 }
-
 #intro::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+  content: ''; position: absolute; inset: 0;
   background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
   pointer-events: none;
 }
-
 #intro::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(200,60,60,0.03) 2px, rgba(200,60,60,0.03) 4px);
-  pointer-events: none;
-  mix-blend-mode: screen;
+  content: ''; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(200,60,60,0.03) 2px, rgba(200,60,60,0.03) 4px);
+  pointer-events: none; mix-blend-mode: screen;
 }
-
 .slide {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 3rem 2rem;
-  opacity: 0;
-  transition: opacity 0.8s ease;
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 4.5rem 1.5rem 5rem;
+  opacity: 0; transition: opacity 0.8s ease;
   pointer-events: none;
 }
-
-.slide.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
+.slide.active { opacity: 1; pointer-events: auto; }
 .slide-number {
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  color: #c83c3c;
-  opacity: 0.8;
+  position: absolute; top: 1.2rem; left: 1.2rem;
+  font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.25em; color: #c83c3c; opacity: 0.8;
 }
-
 .slide-marker {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  color: #888;
+  position: absolute; top: 1.2rem; right: 1.2rem;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  letter-spacing: 0.15em; color: #888;
+  max-width: 50%; text-align: right;
 }
-
 .slide-frame {
-  width: min(720px, 90vw);
-  aspect-ratio: 16/10;
-  background: #141412;
-  border: 1px solid #2a2a26;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 2rem;
+  width: min(720px, 92vw); aspect-ratio: 16/10;
+  background: #141412; border: 1px solid #2a2a26;
+  position: relative; overflow: hidden;
+  margin-bottom: 1.5rem; max-height: 45vh;
 }
-
-.slide-art {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.slide-text {
-  max-width: 640px;
-  text-align: center;
-}
-
+.slide-text { max-width: 640px; text-align: center; width: 100%; }
 .slide-text h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-  color: #e8e6df;
+  font-size: clamp(1.05rem, 3.5vw, 1.75rem);
+  font-weight: 700; letter-spacing: 0.05em;
+  margin-bottom: 0.8rem; color: #e8e6df;
 }
-
 .slide-text p {
   font-family: var(--font-display);
-  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
-  line-height: 1.9;
-  color: #b5b3ac;
-  letter-spacing: 0.02em;
+  font-size: clamp(0.82rem, 2.2vw, 1.05rem);
+  line-height: 1.8; color: #b5b3ac; letter-spacing: 0.02em;
 }
-
-.slide-text .highlight {
-  color: #c83c3c;
-  font-weight: 700;
-}
-
-/* SVG 아트 스타일 */
-.slide-svg {
-  width: 100%;
-  height: 100%;
-}
-
-.slide-svg .panel-line { stroke: #c83c3c; stroke-width: 1.5; fill: none; }
-.slide-svg .panel-thin { stroke: #888; stroke-width: 0.8; fill: none; }
+.slide-text .highlight { color: #c83c3c; font-weight: 700; }
+.slide-svg { width: 100%; height: 100%; }
 .slide-svg .panel-fill { fill: #1e1e1a; }
 .slide-svg .panel-dark { fill: #0a0a08; }
 .slide-svg .panel-text { fill: #e8e6df; font-family: var(--font-mono); }
 .slide-svg .panel-accent { fill: #c83c3c; }
 .slide-svg .panel-muted { fill: #888; }
-
-/* 인트로 네비게이션 */
 .intro-nav {
-  position: absolute;
-  bottom: 2rem;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 3rem;
-  z-index: 10;
+  position: absolute; bottom: 1.5rem; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 1.5rem; z-index: 10; gap: 1rem;
 }
-
-.intro-dots {
-  display: flex;
-  gap: 0.6rem;
-}
-
-.dot {
-  width: 24px;
-  height: 2px;
-  background: #3a3a35;
-  transition: background 0.3s;
-  cursor: pointer;
-}
-
+.intro-dots { display: flex; gap: 0.5rem; }
+.dot { width: 22px; height: 2px; background: #3a3a35; transition: background 0.3s; cursor: pointer; }
 .dot.active { background: #c83c3c; }
-
 .intro-btn {
-  background: transparent;
-  border: 1px solid #3a3a35;
-  color: #b5b3ac;
-  padding: 0.6rem 1.2rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: transparent; border: 1px solid #3a3a35; color: #b5b3ac;
+  padding: 0.55rem 1.1rem; font-family: var(--font-mono);
+  font-size: 0.7rem; letter-spacing: 0.2em;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
 }
-
-.intro-btn:hover {
-  border-color: #c83c3c;
-  color: #c83c3c;
-}
-
+.intro-btn:hover, .intro-btn:active { border-color: #c83c3c; color: #c83c3c; }
 #skipBtn {
-  position: absolute;
-  top: 2rem;
-  right: 50%;
-  transform: translateX(50%);
-  background: transparent;
-  border: none;
-  color: #666;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  transition: color 0.2s;
+  position: absolute; top: 1.2rem; left: 50%; transform: translateX(-50%);
+  background: transparent; border: none; color: #666;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  letter-spacing: 0.25em; cursor: pointer;
+  padding: 0.5rem 1rem; transition: color 0.2s; z-index: 20;
 }
-
-#skipBtn:hover { color: #c83c3c; }
-
-/* 글리치 효과 */
+#skipBtn:hover, #skipBtn:active { color: #c83c3c; }
 @keyframes glitch-in {
   0%, 100% { transform: translateX(0); opacity: 1; }
   20% { transform: translateX(-3px); opacity: 0.8; }
   40% { transform: translateX(3px); opacity: 1; }
   60% { transform: translateX(-2px); opacity: 0.9; }
 }
+.slide.active .slide-text h2 { animation: glitch-in 0.6s ease; }
 
-.slide.active .slide-text h2 {
-  animation: glitch-in 0.6s ease;
-}
-
-/* ==================== 메인 사이트 ==================== */
-
-#main-site {
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  position: relative;
-  z-index: 2;
-}
-
+/* ========== 메인 ========== */
+#main-site { opacity: 0; transition: opacity 0.6s ease; position: relative; z-index: 2; }
 #main-site.revealed { opacity: 1; }
-
-/* 상단 고지 바 */
 .emergency-bar {
-  background: var(--accent);
-  color: #f5f4f1;
-  text-align: center;
-  padding: 0.5rem 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  border-bottom: 1px solid var(--line);
-  position: relative;
-  overflow: hidden;
+  background: var(--accent); color: #f5f4f1;
+  text-align: center; padding: 0.5rem 1rem;
+  font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.12em; border-bottom: 1px solid var(--line);
+  position: relative; overflow: hidden;
 }
-
 .emergency-bar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+  content: ''; position: absolute; inset: 0;
   background: repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px);
   animation: slide-stripe 3s linear infinite;
 }
-
-@keyframes slide-stripe {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(40px); }
-}
-
+@keyframes slide-stripe { 0% { transform: translateX(0); } 100% { transform: translateX(40px); } }
 .emergency-bar span { position: relative; }
 
-/* 헤더 */
-header {
-  border-bottom: 2px solid var(--line);
-  background: var(--bg-panel);
-  position: relative;
-}
-
+header { border-bottom: 2px solid var(--line); background: var(--bg-panel); position: relative; }
 .header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
+  max-width: 1200px; margin: 0 auto; padding: 1.2rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
 }
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.seal {
-  width: 64px;
-  height: 64px;
-  flex-shrink: 0;
-}
-
+.brand { display: flex; align-items: center; gap: 0.9rem; flex: 1; min-width: 0; }
+.seal { width: 54px; height: 54px; flex-shrink: 0; }
 .brand-text h1 {
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  color: var(--ink);
-  line-height: 1.2;
+  font-size: clamp(0.95rem, 2.5vw, 1.3rem);
+  font-weight: 900; letter-spacing: 0.05em;
+  color: var(--ink); line-height: 1.25;
 }
-
 .brand-text .sub-en {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
-  color: var(--ink-faint);
-  margin-top: 0.35rem;
+  font-size: clamp(0.55rem, 1.5vw, 0.7rem);
+  letter-spacing: 0.2em; color: var(--ink-faint);
+  margin-top: 0.3rem;
 }
-
 .header-meta {
-  text-align: right;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  color: var(--ink-soft);
-  line-height: 1.8;
+  text-align: right; font-family: var(--font-mono);
+  font-size: 0.68rem; letter-spacing: 0.12em;
+  color: var(--ink-soft); line-height: 1.7; flex-shrink: 0;
 }
-
 .header-meta .doc-no { color: var(--accent); font-weight: 700; }
-
-/* 테마 토글 */
 .theme-toggle {
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--ink);
-  padding: 0.4rem 0.8rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  margin-top: 0.5rem;
-  transition: all 0.2s;
+  background: transparent; border: 1px solid var(--line); color: var(--ink);
+  padding: 0.35rem 0.7rem; font-family: var(--font-mono);
+  font-size: 0.65rem; letter-spacing: 0.18em;
+  cursor: pointer; margin-top: 0.4rem; transition: all 0.2s;
 }
+.theme-toggle:hover, .theme-toggle:active { background: var(--ink); color: var(--bg); }
 
-.theme-toggle:hover {
-  background: var(--ink);
-  color: var(--bg);
-}
-
-/* 네비게이션 */
-nav.primary {
-  background: var(--bg-deep);
-  border-bottom: 1px solid var(--line);
-}
-
-.nav-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-}
-
+nav.primary { background: var(--bg-deep); border-bottom: 1px solid var(--line); }
+.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; }
 .nav-inner a {
-  padding: 1rem 1.5rem;
-  color: var(--ink);
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  border-right: 1px solid var(--line-soft);
-  transition: all 0.2s;
-  position: relative;
-  cursor: pointer;
+  padding: 0.9rem 1.3rem; color: var(--ink); text-decoration: none;
+  font-family: var(--font-display); font-size: 0.9rem; font-weight: 500;
+  letter-spacing: 0.05em; border-right: 1px solid var(--line-soft);
+  transition: all 0.2s; cursor: pointer; white-space: nowrap;
 }
+.nav-inner a:hover, .nav-inner a:active { background: var(--ink); color: var(--bg); }
 
-.nav-inner a:hover {
-  background: var(--ink);
-  color: var(--bg);
+.mobile-menu-btn {
+  display: none; background: transparent; border: 1px solid var(--line);
+  color: var(--ink); width: 40px; height: 40px;
+  cursor: pointer; align-items: center; justify-content: center; flex-shrink: 0;
 }
-
-.nav-inner a.locked::after {
-  content: '🔒';
-  margin-left: 0.4rem;
-  font-size: 0.75rem;
-  opacity: 0.6;
+.mobile-menu-btn svg { width: 20px; height: 20px; stroke: currentColor; }
+.nav-close {
+  display: none; position: absolute; top: 1rem; right: 1rem;
+  background: transparent; border: 1px solid var(--line); color: var(--ink);
+  width: 36px; height: 36px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 1rem;
 }
+.nav-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 7500; }
+.nav-backdrop.active { display: block; }
 
-/* 메인 컨테이너 */
 main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2.5rem 2rem 4rem;
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 2.5rem;
+  max-width: 1200px; margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  display: grid; grid-template-columns: 1fr 320px; gap: 2rem;
 }
 
-@media (max-width: 900px) {
-  main { grid-template-columns: 1fr; }
-}
-
-/* 카운트다운 히어로 */
 .countdown-hero {
-  grid-column: 1 / -1;
-  background: var(--bg-panel);
-  border: 2px solid var(--line);
-  padding: 2rem;
-  position: relative;
-  margin-bottom: 1rem;
-  overflow: hidden;
+  grid-column: 1 / -1; background: var(--bg-panel);
+  border: 2px solid var(--line); padding: 1.8rem 1.5rem;
+  position: relative; margin-bottom: 0.5rem; overflow: hidden;
 }
-
 .countdown-hero::before {
-  content: '공식';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+  content: '공동'; position: absolute; top: 1rem; right: 1rem;
   font-family: var(--font-display);
-  font-size: 3rem;
-  color: var(--accent);
-  opacity: 0.08;
-  font-weight: 900;
-  transform: rotate(-15deg);
-  letter-spacing: 0.2em;
-  pointer-events: none;
+  font-size: clamp(2rem, 6vw, 3rem);
+  color: var(--accent); opacity: 0.08; font-weight: 900;
+  transform: rotate(-15deg); letter-spacing: 0.2em; pointer-events: none;
 }
-
 .countdown-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.25em;
-  color: var(--ink-soft);
-  margin-bottom: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.22em; color: var(--ink-soft); margin-bottom: 0.4rem;
 }
-
 .countdown-title {
   font-family: var(--font-display);
-  font-size: 1.1rem;
-  letter-spacing: 0.1em;
-  margin-bottom: 1.5rem;
-  color: var(--ink);
+  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+  letter-spacing: 0.08em; margin-bottom: 1.3rem; color: var(--ink);
 }
-
 .countdown-display {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  align-items: baseline;
+  display: flex; gap: 0.6rem; flex-wrap: nowrap;
+  align-items: baseline; justify-content: flex-start;
 }
-
-.countdown-unit {
-  text-align: center;
-  min-width: 80px;
-}
-
+.countdown-unit { text-align: center; min-width: 0; flex: 1; max-width: 120px; }
 .countdown-num {
   font-family: var(--font-mono);
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  font-weight: 700;
-  color: var(--accent);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 700; color: var(--accent);
+  line-height: 1; font-variant-numeric: tabular-nums;
 }
-
 .countdown-sep {
   font-family: var(--font-mono);
-  font-size: clamp(2rem, 4vw, 3rem);
-  color: var(--ink-faint);
-  font-weight: 300;
+  font-size: clamp(1.6rem, 6vw, 3rem);
+  color: var(--ink-faint); font-weight: 300; flex-shrink: 0;
 }
-
 .countdown-small {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: var(--ink-soft);
-  margin-top: 0.4rem;
+  font-size: clamp(0.55rem, 1.3vw, 0.7rem);
+  letter-spacing: 0.18em; color: var(--ink-soft); margin-top: 0.35rem;
 }
 
-/* 지구 상태 표시 */
 .earth-status {
-  display: grid;
-  grid-template-columns: 1fr 40px 1fr;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px dashed var(--line-soft);
-  align-items: center;
+  display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0.8rem;
+  margin-top: 1.8rem; padding-top: 1.3rem;
+  border-top: 1px dashed var(--line-soft); align-items: center;
 }
-
-.earth-card {
-  padding: 1rem;
-  background: var(--bg);
-  border: 1px solid var(--line-soft);
-}
-
+.earth-card { padding: 0.9rem; background: var(--bg); border: 1px solid var(--line-soft); }
 .earth-card .label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  color: var(--ink-faint);
-  margin-bottom: 0.3rem;
+  font-family: var(--font-mono); font-size: 0.6rem;
+  letter-spacing: 0.18em; color: var(--ink-faint); margin-bottom: 0.3rem;
 }
-
 .earth-card .id {
   font-family: var(--font-mono);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 0.3rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  font-weight: 700; color: var(--ink);
+  margin-bottom: 0.25rem; word-break: break-all;
 }
-
-.earth-card .name {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-}
-
+.earth-card .name { font-family: var(--font-display); font-size: 0.8rem; color: var(--ink-soft); }
 .merge-indicator {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 1.5rem;
-  color: var(--accent);
+  text-align: center; font-family: var(--font-mono);
+  font-size: 1.4rem; color: var(--accent);
   animation: pulse-merge 2s ease-in-out infinite;
 }
-
 @keyframes pulse-merge {
   0%, 100% { opacity: 0.4; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.15); }
 }
 
-/* 섹션 카드 */
 .section {
-  background: var(--bg-panel);
-  border: 1px solid var(--line);
-  padding: 1.8rem;
-  margin-bottom: 1.5rem;
-  position: relative;
+  background: var(--bg-panel); border: 1px solid var(--line);
+  padding: 1.5rem; margin-bottom: 1.3rem; position: relative;
 }
-
 .section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 1.2rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--line);
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 1rem; padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--line); gap: 0.5rem; flex-wrap: wrap;
 }
-
 .section-head h2 {
   font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--ink);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 700; letter-spacing: 0.07em; color: var(--ink);
 }
-
 .section-head .code {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: var(--ink-faint);
+  font-family: var(--font-mono); font-size: 0.65rem;
+  letter-spacing: 0.18em; color: var(--ink-faint);
 }
 
-/* 사건파일 목록 */
-.file-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
+.file-list { display: flex; flex-direction: column; gap: 0.5rem; }
 .file-item {
-  display: grid;
-  grid-template-columns: 80px 1fr auto;
-  gap: 1rem;
-  align-items: center;
-  padding: 1rem;
-  background: var(--bg);
-  border: 1px solid var(--line-soft);
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  color: var(--ink);
+  display: grid; grid-template-columns: 60px 1fr auto;
+  gap: 0.8rem; align-items: center; padding: 0.9rem;
+  background: var(--bg); border: 1px solid var(--line-soft);
+  cursor: pointer; transition: all 0.2s;
+  text-decoration: none; color: var(--ink);
 }
-
-.file-item:not(.locked):hover {
-  border-color: var(--accent);
-  transform: translateX(4px);
+.file-item:not(.locked):hover, .file-item:not(.locked):active {
+  border-color: var(--accent); transform: translateX(3px);
 }
-
-.file-item.locked {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
+.file-item.locked { opacity: 0.5; cursor: not-allowed; }
 .file-num {
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono); font-size: 1rem;
+  font-weight: 700; color: var(--accent); letter-spacing: 0.08em;
 }
-
+.file-info { min-width: 0; }
 .file-info .file-title {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 0.2rem;
+  font-family: var(--font-display); font-size: 0.95rem; font-weight: 500;
+  margin-bottom: 0.15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-
 .file-info .file-desc {
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  color: var(--ink-soft);
+  font-family: var(--font-display); font-size: 0.75rem; color: var(--ink-soft);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-
 .file-status {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  padding: 0.3rem 0.7rem;
-  border: 1px solid var(--line-soft);
+  font-family: var(--font-mono); font-size: 0.65rem;
+  letter-spacing: 0.12em; padding: 0.3rem 0.6rem;
+  border: 1px solid var(--line-soft); white-space: nowrap; flex-shrink: 0;
 }
-
 .file-status.open { color: var(--ok); border-color: var(--ok); }
 .file-status.locked { color: var(--ink-faint); }
 
-/* 용어 정리 */
-.glossary {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+.glossary { display: flex; flex-direction: column; gap: 0.9rem; }
+.term { padding: 0.95rem; background: var(--bg); border-left: 3px solid var(--accent); }
+.term-word { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+.term-word .hanja { font-size: 0.8rem; color: var(--ink-faint); font-weight: 400; margin-left: 0.3rem; }
+.term-def { font-family: var(--font-display); font-size: 0.88rem; color: var(--ink-soft); line-height: 1.7; }
+.term-note { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-faint); margin-top: 0.5rem; letter-spacing: 0.04em; }
 
-.term {
-  padding: 1rem;
-  background: var(--bg);
-  border-left: 3px solid var(--accent);
-}
+.overview { font-family: var(--font-display); line-height: 1.85; color: var(--ink-soft); font-size: 0.92rem; }
+.overview p { margin-bottom: 0.9rem; }
+.overview p strong { color: var(--ink); font-weight: 700; }
+.overview .redacted { background: var(--ink); color: var(--ink); padding: 0 0.4rem; user-select: none; cursor: not-allowed; }
 
-.term-word {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin-bottom: 0.3rem;
-}
-
-.term-word .hanja {
-  font-size: 0.85rem;
-  color: var(--ink-faint);
-  font-weight: 400;
-  margin-left: 0.4rem;
-}
-
-.term-def {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  color: var(--ink-soft);
-  line-height: 1.7;
-}
-
-.term-note {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--ink-faint);
-  margin-top: 0.5rem;
-  letter-spacing: 0.05em;
-}
-
-/* 사건 개요 */
-.overview {
-  font-family: var(--font-display);
-  line-height: 1.9;
-  color: var(--ink-soft);
-}
-
-.overview p { margin-bottom: 1rem; }
-
-.overview p strong {
-  color: var(--ink);
-  font-weight: 700;
-}
-
-.overview .redacted {
-  background: var(--ink);
-  color: var(--ink);
-  padding: 0 0.4rem;
-  user-select: none;
-  cursor: not-allowed;
-}
-
-/* 시민 대처요령 */
-.guidelines {
-  display: grid;
-  gap: 0.75rem;
-}
-
+.guidelines { display: grid; gap: 0.7rem; }
 .guideline-item {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 1rem;
-  padding: 0.9rem;
-  background: var(--bg);
-  border: 1px solid var(--line-soft);
+  display: grid; grid-template-columns: 36px 1fr;
+  gap: 0.8rem; padding: 0.8rem;
+  background: var(--bg); border: 1px solid var(--line-soft);
 }
+.guideline-num { font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent); font-weight: 700; }
+.guideline-text { font-family: var(--font-display); font-size: 0.88rem; line-height: 1.6; }
 
-.guideline-num {
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  color: var(--accent);
-  font-weight: 700;
-}
-
-.guideline-text {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
-
-/* 사이드바 */
-aside {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.sidebar-section {
-  background: var(--bg-panel);
-  border: 1px solid var(--line);
-  padding: 1.3rem;
-}
-
+aside { display: flex; flex-direction: column; gap: 1.3rem; }
+.sidebar-section { background: var(--bg-panel); border: 1px solid var(--line); padding: 1.2rem; }
 .sidebar-head {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
-  color: var(--ink-soft);
-  padding-bottom: 0.7rem;
-  margin-bottom: 1rem;
+  font-family: var(--font-mono); font-size: 0.68rem;
+  letter-spacing: 0.22em; color: var(--ink-soft);
+  padding-bottom: 0.65rem; margin-bottom: 0.9rem;
   border-bottom: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: flex; align-items: center; gap: 0.5rem;
 }
-
 .sidebar-head::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  animation: blink 2s infinite;
+  content: ''; width: 8px; height: 8px; background: var(--accent);
+  border-radius: 50%; animation: blink 2s infinite; flex-shrink: 0;
 }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-/* 로그인 박스 */
 .login-box input {
-  width: 100%;
-  padding: 0.7rem;
-  background: var(--bg);
-  border: 1px solid var(--line-soft);
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-  transition: border-color 0.2s;
+  width: 100%; padding: 0.7rem; background: var(--bg);
+  border: 1px solid var(--line-soft); color: var(--ink);
+  font-family: var(--font-mono); font-size: 0.85rem;
+  margin-bottom: 0.5rem; transition: border-color 0.2s;
 }
-
-.login-box input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
+.login-box input:focus { outline: none; border-color: var(--accent); }
 .login-box button {
-  width: 100%;
-  padding: 0.7rem;
-  background: var(--ink);
-  color: var(--bg);
-  border: none;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: background 0.2s;
+  width: 100%; padding: 0.75rem; background: var(--ink); color: var(--bg);
+  border: none; font-family: var(--font-mono);
+  font-size: 0.72rem; letter-spacing: 0.18em;
+  cursor: pointer; transition: background 0.2s;
 }
-
-.login-box button:hover { background: var(--accent); }
-
-.login-msg {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  margin-top: 0.5rem;
-  min-height: 1rem;
-  letter-spacing: 0.05em;
-}
-
+.login-box button:hover, .login-box button:active { background: var(--accent); }
+.login-msg { font-family: var(--font-mono); font-size: 0.68rem; margin-top: 0.5rem; min-height: 1rem; letter-spacing: 0.04em; }
 .login-msg.error { color: var(--accent); }
 .login-msg.ok { color: var(--ok); }
 
-/* 뉴스 */
-.news-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-.news-item {
-  padding-bottom: 0.8rem;
-  border-bottom: 1px dashed var(--line-soft);
-}
-
+.news-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.news-item { padding-bottom: 0.7rem; border-bottom: 1px dashed var(--line-soft); }
 .news-item:last-child { border-bottom: none; padding-bottom: 0; }
-
-.news-time {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--ink-faint);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.25rem;
-}
-
-.news-headline {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--ink);
-}
-
+.news-time { font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-faint); letter-spacing: 0.08em; margin-bottom: 0.25rem; }
+.news-headline { font-family: var(--font-display); font-size: 0.83rem; line-height: 1.5; color: var(--ink); }
 .news-headline .tag {
-  display: inline-block;
-  background: var(--accent);
-  color: #fff;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  padding: 0.1rem 0.4rem;
-  letter-spacing: 0.15em;
-  margin-right: 0.4rem;
-  vertical-align: middle;
+  display: inline-block; background: var(--accent); color: #fff;
+  font-family: var(--font-mono); font-size: 0.58rem;
+  padding: 0.1rem 0.4rem; letter-spacing: 0.12em;
+  margin-right: 0.4rem; vertical-align: middle;
 }
+.news-headline .tag.alt { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
 
-/* 푸터 */
 footer {
-  border-top: 2px solid var(--line);
-  background: var(--bg-panel);
-  padding: 2rem;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--ink-faint);
-  letter-spacing: 0.15em;
-  line-height: 1.8;
+  border-top: 2px solid var(--line); background: var(--bg-panel);
+  padding: 1.8rem 1.5rem; text-align: center;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: var(--ink-faint); letter-spacing: 0.12em; line-height: 1.8;
 }
-
-footer .gov-seal {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  color: var(--ink-soft);
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.3em;
-}
-
-/* ==================== 잠금 모달 ==================== */
+footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.4rem; letter-spacing: 0.25em; }
 
 .modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9000;
-  padding: 2rem;
-  backdrop-filter: blur(4px);
+  position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+  display: none; justify-content: center; align-items: center;
+  z-index: 9000; padding: 1.5rem; backdrop-filter: blur(4px);
 }
-
 .modal-overlay.active { display: flex; }
-
 .modal {
-  background: var(--bg-panel);
-  border: 2px solid var(--line);
-  padding: 2rem;
-  max-width: 480px;
-  width: 100%;
-  position: relative;
+  background: var(--bg-panel); border: 2px solid var(--line);
+  padding: 1.8rem 1.5rem; max-width: 480px; width: 100%; position: relative;
 }
-
 .modal::before {
-  content: '기밀';
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  background: var(--accent);
-  color: #fff;
-  padding: 0.3rem 0.8rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
+  content: '기밀'; position: absolute; top: -1px; left: -1px;
+  background: var(--accent); color: #fff;
+  padding: 0.3rem 0.7rem; font-family: var(--font-mono);
+  font-size: 0.65rem; letter-spacing: 0.22em;
 }
-
-.modal h3 {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.05em;
-}
-
-.modal p {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-  margin-bottom: 1rem;
-  line-height: 1.7;
-}
-
+.modal h3 { font-family: var(--font-display); font-size: 1.1rem; margin-top: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.04em; }
+.modal p { font-family: var(--font-display); font-size: 0.83rem; color: var(--ink-soft); margin-bottom: 1rem; line-height: 1.7; }
 .modal input {
-  width: 100%;
-  padding: 0.8rem;
-  background: var(--bg);
-  border: 1px solid var(--line-soft);
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.1em;
+  width: 100%; padding: 0.75rem; background: var(--bg);
+  border: 1px solid var(--line-soft); color: var(--ink);
+  font-family: var(--font-mono); font-size: 0.9rem;
+  margin-bottom: 0.5rem; letter-spacing: 0.08em;
 }
-
 .modal input:focus { outline: none; border-color: var(--accent); }
-
-.modal-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.8rem;
-}
-
+.modal-actions { display: flex; gap: 0.5rem; margin-top: 0.7rem; }
 .modal-actions button {
-  flex: 1;
-  padding: 0.7rem;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: all 0.2s;
+  flex: 1; padding: 0.75rem; border: 1px solid var(--line);
+  background: transparent; color: var(--ink);
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.18em; cursor: pointer; transition: all 0.2s;
 }
-
-.modal-actions button.primary {
-  background: var(--ink);
-  color: var(--bg);
-}
-
-.modal-actions button:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-.modal-msg {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
-  min-height: 1rem;
-  letter-spacing: 0.05em;
-}
-
+.modal-actions button.primary { background: var(--ink); color: var(--bg); }
+.modal-actions button:hover, .modal-actions button:active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.modal-msg { font-family: var(--font-mono); font-size: 0.72rem; margin-top: 0.5rem; min-height: 1rem; letter-spacing: 0.04em; }
 .modal-msg.error { color: var(--accent); }
 .modal-msg.ok { color: var(--ok); }
 
-/* ==================== 미니게임 진입 화면 ==================== */
 #game-screen {
-  position: fixed;
-  inset: 0;
-  background: #0a0a08;
-  color: #e8e6df;
-  z-index: 9500;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
+  position: fixed; inset: 0; background: #0a0a08; color: #e8e6df;
+  z-index: 9500; display: none; justify-content: center;
+  align-items: center; padding: 2rem;
 }
-
 #game-screen.active { display: flex; }
-
-.game-pending {
-  text-align: center;
-  max-width: 520px;
-}
-
+.game-pending { text-align: center; max-width: 520px; }
 .game-pending h2 {
   font-family: var(--font-display);
-  font-size: 1.5rem;
-  letter-spacing: 0.2em;
-  margin-bottom: 1rem;
-  color: #c83c3c;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  letter-spacing: 0.18em; margin-bottom: 1rem; color: #c83c3c;
 }
-
-.game-pending p {
-  font-family: var(--font-display);
-  line-height: 1.8;
-  color: #b5b3ac;
-  margin-bottom: 2rem;
-}
-
+.game-pending p { font-family: var(--font-display); line-height: 1.8; color: #b5b3ac; margin-bottom: 2rem; font-size: 0.95rem; }
 .game-pending button {
-  background: transparent;
-  border: 1px solid #3a3a35;
-  color: #b5b3ac;
-  padding: 0.7rem 1.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: transparent; border: 1px solid #3a3a35; color: #b5b3ac;
+  padding: 0.7rem 1.5rem; font-family: var(--font-mono);
+  font-size: 0.72rem; letter-spacing: 0.18em;
+  cursor: pointer; transition: all 0.2s;
+}
+.game-pending button:hover, .game-pending button:active { border-color: #c83c3c; color: #c83c3c; }
+
+/* ===== 반응형 ===== */
+@media (max-width: 960px) {
+  main { grid-template-columns: 1fr; padding: 1.5rem 1.2rem 2.5rem; gap: 1.3rem; }
+  .nav-inner { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-inner a { padding: 0.85rem 1.1rem; font-size: 0.85rem; flex-shrink: 0; }
 }
 
-.game-pending button:hover { border-color: #c83c3c; color: #c83c3c; }
+@media (max-width: 640px) {
+  .header-inner { padding: 1rem; gap: 0.8rem; }
+  .seal { width: 44px; height: 44px; }
+  .header-meta { display: none; }
+  .mobile-menu-btn { display: flex; }
 
-/* 반응형 */
-@media (max-width: 700px) {
-  .header-inner { flex-direction: column; align-items: flex-start; }
-  .header-meta { text-align: left; }
-  .earth-status { grid-template-columns: 1fr; }
-  .merge-indicator { transform: rotate(90deg); }
-  .nav-inner a { padding: 0.8rem 1rem; font-size: 0.85rem; }
-  main { padding: 1.5rem 1rem 2rem; }
+  nav.primary {
+    display: none; position: fixed; top: 0; right: 0; bottom: 0;
+    width: 80%; max-width: 300px;
+    background: var(--bg-panel); z-index: 8000;
+    border-left: 2px solid var(--line);
+    padding-top: 3.5rem; overflow-y: auto;
+    transform: translateX(100%); transition: transform 0.3s ease;
+  }
+  nav.primary.open { display: block; transform: translateX(0); }
+  .nav-inner { flex-direction: column; overflow: visible; }
+  .nav-inner a {
+    padding: 1rem 1.5rem; border-right: none;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 0.95rem; width: 100%;
+  }
+  .nav-close { display: block; }
+
+  main { padding: 1.2rem 1rem 2rem; }
+  .countdown-hero { padding: 1.3rem 1rem; }
+  .countdown-display { justify-content: center; }
+  .countdown-unit { max-width: none; }
+  .earth-status { grid-template-columns: 1fr; gap: 0.7rem; }
+  .merge-indicator { transform: rotate(90deg); font-size: 1.6rem; padding: 0.3rem 0; }
+  .section { padding: 1.2rem 1rem; }
+  .section-head { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+  .file-item { grid-template-columns: 44px 1fr; gap: 0.6rem; }
+  .file-status { grid-column: 1 / -1; justify-self: start; font-size: 0.6rem; padding: 0.2rem 0.5rem; margin-top: 0.2rem; }
+  .emergency-bar { font-size: 0.62rem; padding: 0.45rem 0.8rem; letter-spacing: 0.08em; }
+  .slide { padding: 3.5rem 1rem 4.5rem; }
+  .slide-frame { max-height: 40vh; }
+  .intro-nav { padding: 0 1rem; flex-direction: row; gap: 0.8rem; }
+  .intro-btn { padding: 0.5rem 0.9rem; font-size: 0.65rem; }
+  footer { padding: 1.5rem 1rem; font-size: 0.6rem; }
 }
 
+@media (max-width: 400px) {
+  .countdown-num { font-size: 2rem; }
+  .countdown-sep { font-size: 1.6rem; }
+  .slide-text h2 { font-size: 1rem; }
+  .slide-text p { font-size: 0.78rem; }
+  .brand-text h1 { font-size: 0.9rem; }
+}
+
+@media (hover: none) {
+  .file-item:not(.locked):active { border-color: var(--accent); }
+  .theme-toggle:active { background: var(--ink); color: var(--bg); }
+}
 </style>
 </head>
 <body data-theme="dark">
 
-<!-- ====================== 인트로 슬라이드쇼 ====================== -->
+<!-- 인트로 -->
 <div id="intro">
   <button id="skipBtn">▷ SKIP INTRO</button>
 
-  <!-- SLIDE 1 -->
   <div class="slide active" data-slide="0">
     <div class="slide-number">01 / 05</div>
     <div class="slide-marker">CLASSIFIED — URGENT</div>
     <div class="slide-frame">
-      <svg class="slide-svg" viewBox="0 0 720 450">
+      <svg class="slide-svg" viewBox="0 0 720 450" preserveAspectRatio="xMidYMid meet">
         <rect class="panel-dark" width="720" height="450"/>
-        <!-- 지구 1 -->
         <circle cx="240" cy="225" r="90" class="panel-fill" stroke="#c83c3c" stroke-width="2"/>
         <path d="M 180 200 Q 220 180 260 210 T 300 220" stroke="#c83c3c" stroke-width="1" fill="none"/>
         <path d="M 170 240 Q 210 260 260 250 T 310 260" stroke="#c83c3c" stroke-width="1" fill="none"/>
-        <!-- 지구 2 -->
         <circle cx="480" cy="225" r="90" class="panel-fill" stroke="#888" stroke-width="2" stroke-dasharray="4 3"/>
         <path d="M 420 200 Q 460 180 500 210 T 540 220" stroke="#888" stroke-width="1" fill="none"/>
         <path d="M 410 240 Q 450 260 500 250 T 550 260" stroke="#888" stroke-width="1" fill="none"/>
-        <!-- 중앙 기호 -->
         <text x="360" y="235" text-anchor="middle" class="panel-accent" font-family="serif" font-size="48" font-weight="700">合</text>
-        <!-- 레이블 -->
         <text x="240" y="345" text-anchor="middle" class="panel-muted" font-size="11" letter-spacing="2">Ω — 2026</text>
         <text x="480" y="345" text-anchor="middle" class="panel-muted" font-size="11" letter-spacing="2">Ψ — 13.0.1.5.12</text>
       </svg>
     </div>
     <div class="slide-text">
-      <h2>2026년 4월 17일 03:17 KST</h2>
-      <p>두 개의 지구가 <span class="highlight">겹쳤다.</span><br>
-      우리가 있던 세계(Ω-2026)와<br>마야 장기력을 따르는 미지의 세계(Ψ-13.0.1.5.12)가<br>같은 좌표에 존재하기 시작했다.</p>
+      <h2>두 개의 지구가 겹쳐졌다</h2>
+      <p>서로 다른 시간 좌표를 따르는 두 지구<br>
+      — <span class="highlight">Ω-2026</span> 과 <span class="highlight">Ψ-13.0.1.5.12</span> —<br>
+      가 동일한 공간에 동시에 존재하는 현상이 관측되었다.</p>
     </div>
   </div>
 
-  <!-- SLIDE 2 -->
   <div class="slide" data-slide="1">
     <div class="slide-number">02 / 05</div>
     <div class="slide-marker">BRIEFING — COSMOLOGY</div>
     <div class="slide-frame">
-      <svg class="slide-svg" viewBox="0 0 720 450">
+      <svg class="slide-svg" viewBox="0 0 720 450" preserveAspectRatio="xMidYMid meet">
         <rect class="panel-dark" width="720" height="450"/>
-        <!-- 게임 세이브 슬롯 UI 풍 -->
         <rect x="80" y="80" width="260" height="290" fill="none" stroke="#c83c3c" stroke-width="1.5"/>
         <rect x="380" y="80" width="260" height="290" fill="none" stroke="#888" stroke-width="1.5" stroke-dasharray="4 3"/>
-        <text x="210" y="115" text-anchor="middle" class="panel-text" font-size="12" letter-spacing="2">SAVE SLOT 01</text>
-        <text x="510" y="115" text-anchor="middle" class="panel-text" font-size="12" letter-spacing="2">SAVE SLOT 02</text>
+        <text x="210" y="115" text-anchor="middle" class="panel-text" font-size="12" letter-spacing="2">SAVE SLOT · Ω</text>
+        <text x="510" y="115" text-anchor="middle" class="panel-text" font-size="12" letter-spacing="2">SAVE SLOT · Ψ</text>
         <line x1="100" y1="130" x2="320" y2="130" stroke="#c83c3c" stroke-width="0.5"/>
         <line x1="400" y1="130" x2="620" y2="130" stroke="#888" stroke-width="0.5"/>
-        <text x="210" y="170" text-anchor="middle" class="panel-text" font-size="10">PLAYER — YOU</text>
+        <text x="210" y="170" text-anchor="middle" class="panel-text" font-size="10">ENTITY ID · XXXX</text>
         <text x="210" y="195" text-anchor="middle" class="panel-muted" font-size="9">Ω-2026 / EARTH</text>
-        <text x="210" y="240" text-anchor="middle" class="panel-accent" font-size="36" font-weight="700">01</text>
-        <text x="510" y="170" text-anchor="middle" class="panel-text" font-size="10">PLAYER — ???</text>
+        <text x="210" y="240" text-anchor="middle" class="panel-accent" font-size="36" font-weight="700">●</text>
+        <text x="510" y="170" text-anchor="middle" class="panel-text" font-size="10">ENTITY ID · XXXX</text>
         <text x="510" y="195" text-anchor="middle" class="panel-muted" font-size="9">Ψ-13.0.1.5.12 / EARTH</text>
-        <text x="510" y="240" text-anchor="middle" class="panel-muted" font-size="36" font-weight="700">02</text>
-        <!-- 에러 메시지 -->
+        <text x="510" y="240" text-anchor="middle" class="panel-muted" font-size="36" font-weight="700">●</text>
         <rect x="160" y="390" width="400" height="40" fill="#c83c3c" fill-opacity="0.15" stroke="#c83c3c" stroke-width="1"/>
-        <text x="360" y="416" text-anchor="middle" class="panel-accent" font-size="11" letter-spacing="2">ERROR: DUPLICATE SAVE DETECTED</text>
+        <text x="360" y="416" text-anchor="middle" class="panel-accent" font-size="11" letter-spacing="2">DUPLICATE ENTITY — BOTH SIDES</text>
       </svg>
     </div>
     <div class="slide-text">
       <h2>게임에 비유하자면</h2>
-      <p>같은 세이브 파일이 <span class="highlight">두 번 불러와졌다.</span><br>
-      시스템은 하나의 슬롯만 허용한다.<br>두 개의 현실은 중첩 상태를 오래 유지할 수 없다.</p>
+      <p>동일한 세이브 파일이 <span class="highlight">두 슬롯에 동시에 존재</span>하는 상태다.<br>
+      양 지구에 같은 식별자를 가진 개체가 나타나며,<br>시스템은 이를 정상 상태로 간주하지 않는다.</p>
     </div>
   </div>
 
-  <!-- SLIDE 3 -->
   <div class="slide" data-slide="2">
     <div class="slide-number">03 / 05</div>
     <div class="slide-marker">BRIEFING — MECHANICS</div>
     <div class="slide-frame">
-      <svg class="slide-svg" viewBox="0 0 720 450">
+      <svg class="slide-svg" viewBox="0 0 720 450" preserveAspectRatio="xMidYMid meet">
         <rect class="panel-dark" width="720" height="450"/>
-        <!-- 삭제 프로세스 풍 -->
         <rect x="80" y="100" width="560" height="60" fill="none" stroke="#888" stroke-width="1"/>
         <rect x="80" y="100" width="560" height="60" fill="#c83c3c" fill-opacity="0.1"/>
         <text x="360" y="138" text-anchor="middle" class="panel-text" font-size="14" letter-spacing="3">DATA INTEGRITY CHECK...</text>
         <rect x="80" y="180" width="560" height="8" fill="none" stroke="#888"/>
         <rect x="80" y="180" width="320" height="8" fill="#c83c3c"/>
         <text x="640" y="187" text-anchor="end" class="panel-muted" font-size="9">57%</text>
-        <!-- 경고문 -->
         <text x="360" y="250" text-anchor="middle" class="panel-accent" font-size="13" letter-spacing="2">DUPLICATE ENTITY DETECTED</text>
-        <text x="360" y="280" text-anchor="middle" class="panel-muted" font-size="10">Entity ID: [YOUR_NAME]</text>
-        <text x="360" y="300" text-anchor="middle" class="panel-muted" font-size="10">Occurrences: 2</text>
-        <text x="360" y="320" text-anchor="middle" class="panel-muted" font-size="10">Allowed: 1</text>
-        <text x="360" y="360" text-anchor="middle" class="panel-text" font-size="12" letter-spacing="2">RESOLUTION: FORCE DELETE BOTH</text>
-        <text x="360" y="390" text-anchor="middle" class="panel-accent" font-size="10" letter-spacing="2">⚠ ACTION REQUIRED BEFORE T-00:00:00</text>
+        <text x="360" y="280" text-anchor="middle" class="panel-muted" font-size="10">Occurrences: 2 (Ω + Ψ)</text>
+        <text x="360" y="300" text-anchor="middle" class="panel-muted" font-size="10">Permitted after merge: 1</text>
+        <text x="360" y="340" text-anchor="middle" class="panel-text" font-size="12" letter-spacing="2">PREDICTED RESOLUTION: UNKNOWN</text>
+        <text x="360" y="390" text-anchor="middle" class="panel-accent" font-size="10" letter-spacing="2">⚠ PENDING T-00:00:00</text>
       </svg>
     </div>
     <div class="slide-text">
       <h2>데이터는 중복을 허용하지 않는다</h2>
-      <p>합일이 완료되는 순간, 시스템은<br>중복된 존재를 <span class="highlight">양쪽 다 삭제한다.</span><br>
-      — 단, 제한시간 안에 하나가 사라지면 나머지 하나는 남는다.</p>
+      <p>두 지구가 완전히 합쳐지는 순간<br>
+      중복된 존재는 <span class="highlight">양측 모두 소실</span>될 것으로 추정된다.<br>
+      — 현재로서는 추정에 불과하다.</p>
     </div>
   </div>
 
-  <!-- SLIDE 4 -->
   <div class="slide" data-slide="3">
     <div class="slide-number">04 / 05</div>
     <div class="slide-marker">BRIEFING — RUMOR</div>
     <div class="slide-frame">
-      <svg class="slide-svg" viewBox="0 0 720 450">
+      <svg class="slide-svg" viewBox="0 0 720 450" preserveAspectRatio="xMidYMid meet">
         <rect class="panel-dark" width="720" height="450"/>
-        <!-- 두 실루엣 대립 -->
         <g transform="translate(240, 225)">
           <circle cx="0" cy="-40" r="28" fill="none" stroke="#c83c3c" stroke-width="1.5"/>
           <path d="M -35 -10 Q -35 50 0 50 Q 35 50 35 -10" fill="none" stroke="#c83c3c" stroke-width="1.5"/>
@@ -1199,34 +636,30 @@ footer .gov-seal {
           <circle cx="0" cy="-40" r="28" fill="none" stroke="#888" stroke-width="1.5" stroke-dasharray="3 2"/>
           <path d="M -35 -10 Q -35 50 0 50 Q 35 50 35 -10" fill="none" stroke="#888" stroke-width="1.5" stroke-dasharray="3 2"/>
         </g>
-        <!-- 중앙 칼/선 -->
         <line x1="360" y1="140" x2="360" y2="320" stroke="#c83c3c" stroke-width="1" stroke-dasharray="2 4"/>
         <text x="360" y="80" text-anchor="middle" class="panel-accent" font-size="18" font-weight="700" letter-spacing="4">MIRROR</text>
-        <text x="240" y="340" text-anchor="middle" class="panel-text" font-size="11" letter-spacing="2">YOU</text>
-        <text x="480" y="340" text-anchor="middle" class="panel-muted" font-size="11" letter-spacing="2">YOU</text>
-        <text x="360" y="410" text-anchor="middle" class="panel-accent" font-size="12" letter-spacing="3" font-style="italic">ONLY ONE SHALL WALK OUT</text>
+        <text x="240" y="340" text-anchor="middle" class="panel-text" font-size="11" letter-spacing="2">Ω</text>
+        <text x="480" y="340" text-anchor="middle" class="panel-muted" font-size="11" letter-spacing="2">Ψ</text>
+        <text x="360" y="410" text-anchor="middle" class="panel-accent" font-size="12" letter-spacing="3" font-style="italic">ONLY ONE SHALL REMAIN?</text>
       </svg>
     </div>
     <div class="slide-text">
       <h2>떠도는 소문</h2>
-      <p>합일 이전에 <span class="highlight">자신의 평행자아를 먼저 죽이면</span><br>
-      자신만은 살아남을 수 있다는 — 검증되지 않은 이야기.<br>
-      정부는 이를 <strong>공식적으로 부인</strong>한다. 공식적으로는.</p>
+      <p>합일 이전에 <span class="highlight">자신의 평행자아를 먼저 제거</span>하면<br>
+      스스로는 살아남을 수 있다는 — 검증되지 않은 이야기.<br>
+      양 지구의 모든 공식 기관은 이를 사실로 인정하지 않는다.</p>
     </div>
   </div>
 
-  <!-- SLIDE 5 -->
   <div class="slide" data-slide="4">
     <div class="slide-number">05 / 05</div>
     <div class="slide-marker">BRIEFING — DIRECTIVE</div>
     <div class="slide-frame">
-      <svg class="slide-svg" viewBox="0 0 720 450">
+      <svg class="slide-svg" viewBox="0 0 720 450" preserveAspectRatio="xMidYMid meet">
         <rect class="panel-dark" width="720" height="450"/>
-        <!-- 대형 카운트다운 -->
         <text x="360" y="160" text-anchor="middle" class="panel-muted" font-size="12" letter-spacing="4">TIME UNTIL 再臨</text>
         <text x="360" y="280" text-anchor="middle" class="panel-accent" font-size="96" font-weight="700" font-family="IBM Plex Mono">48:00:00</text>
-        <text x="360" y="330" text-anchor="middle" class="panel-text" font-size="11" letter-spacing="3">REMAIN CALM. AWAIT FURTHER INSTRUCTIONS.</text>
-        <!-- 모서리 장식 -->
+        <text x="360" y="330" text-anchor="middle" class="panel-text" font-size="11" letter-spacing="3">PENDING FURTHER INFORMATION.</text>
         <path d="M 40 40 L 40 80 M 40 40 L 80 40" stroke="#c83c3c" stroke-width="1.5"/>
         <path d="M 680 40 L 680 80 M 680 40 L 640 40" stroke="#c83c3c" stroke-width="1.5"/>
         <path d="M 40 410 L 40 370 M 40 410 L 80 410" stroke="#c83c3c" stroke-width="1.5"/>
@@ -1235,9 +668,8 @@ footer .gov-seal {
     </div>
     <div class="slide-text">
       <h2>재림(再臨)까지</h2>
-      <p>남은 시간 <span class="highlight">48시간.</span><br>
-      합일사건 대응본부는 모든 시민의 협조를 요청합니다.<br>
-      — 이 문서는 임시 공개되었습니다.</p>
+      <p>남은 시간 <span class="highlight">약 48시간.</span><br>
+      본 문서는 양 지구의 공동 임시기구<br><strong>합일사건 공동대응본부</strong>에 의해 공개된 중립 안내문이다.</p>
     </div>
   </div>
 
@@ -1253,38 +685,47 @@ footer .gov-seal {
   </div>
 </div>
 
-<!-- ====================== 메인 사이트 ====================== -->
+<!-- 메인 -->
 <div id="main-site">
 
   <div class="emergency-bar">
-    <span>⚠ 공지 · 합일사건 대응본부 긴급 안내 — 모든 시민은 하단 '대처요령'을 숙지할 것 ⚠</span>
+    <span>⚠ 공지 · 합일사건 공동대응본부 긴급 안내 — 양 지구 모든 시민은 '대처요령' 숙지 요망 ⚠</span>
   </div>
 
   <header>
     <div class="header-inner">
       <div class="brand">
-        <!-- 공식 인장 SVG -->
         <svg class="seal" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="46" fill="none" stroke="var(--seal)" stroke-width="2"/>
           <circle cx="50" cy="50" r="38" fill="none" stroke="var(--seal)" stroke-width="1"/>
           <text x="50" y="58" text-anchor="middle" fill="var(--seal)" font-family="serif" font-size="32" font-weight="900">合</text>
-          <text x="50" y="15" text-anchor="middle" fill="var(--seal)" font-family="monospace" font-size="6" letter-spacing="1">UNION RESPONSE BUREAU</text>
-          <text x="50" y="92" text-anchor="middle" fill="var(--seal)" font-family="monospace" font-size="6" letter-spacing="2">Ω - 2026</text>
+          <text x="50" y="15" text-anchor="middle" fill="var(--seal)" font-family="monospace" font-size="5.5" letter-spacing="1">JOINT RESPONSE BUREAU</text>
+          <text x="50" y="92" text-anchor="middle" fill="var(--seal)" font-family="monospace" font-size="5.5" letter-spacing="2">Ω ∩ Ψ</text>
         </svg>
         <div class="brand-text">
-          <h1>합일사건 대응본부</h1>
-          <div class="sub-en">THE UNION — OFFICIAL RESPONSE BUREAU</div>
+          <h1>합일사건 공동대응본부</h1>
+          <div class="sub-en">THE UNION — JOINT RESPONSE BUREAU (Ω ∩ Ψ)</div>
         </div>
       </div>
       <div class="header-meta">
-        <div>문서번호 <span class="doc-no">URB-2026-0417-001</span></div>
+        <div>문서번호 <span class="doc-no">JRB-C-0417-001</span></div>
         <div>최종 갱신 · <span id="lastUpdate">—</span></div>
         <button class="theme-toggle" id="themeToggle">◐ LIGHT / DARK</button>
       </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="메뉴">
+        <svg viewBox="0 0 24 24" fill="none">
+          <line x1="3" y1="7" x2="21" y2="7" stroke-width="2"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke-width="2"/>
+          <line x1="3" y1="17" x2="21" y2="17" stroke-width="2"/>
+        </svg>
+      </button>
     </div>
   </header>
 
-  <nav class="primary">
+  <div class="nav-backdrop" id="navBackdrop"></div>
+
+  <nav class="primary" id="primaryNav">
+    <button class="nav-close" id="navClose" aria-label="닫기">×</button>
     <div class="nav-inner">
       <a href="#login">로그인</a>
       <a href="#cases">사건파일</a>
@@ -1296,7 +737,6 @@ footer .gov-seal {
   </nav>
 
   <main>
-    <!-- 메인 카운트다운 -->
     <section class="countdown-hero">
       <div class="countdown-label">T-MINUS · 재림(再臨)까지</div>
       <div class="countdown-title">The Second Advent — Estimated Time Remaining</div>
@@ -1319,48 +759,45 @@ footer .gov-seal {
 
       <div class="earth-status">
         <div class="earth-card">
-          <div class="label">PRIMARY · 본 지구</div>
+          <div class="label">EARTH · A</div>
           <div class="id">Ω — 2026</div>
-          <div class="name">오메가 지구 / 관측 주체</div>
+          <div class="name">오메가 지구 / 그레고리력</div>
         </div>
         <div class="merge-indicator">⇋</div>
         <div class="earth-card">
-          <div class="label">MIRROR · 조응 지구</div>
+          <div class="label">EARTH · B</div>
           <div class="id">Ψ — 13.0.1.5.12</div>
           <div class="name">프사이 지구 / 마야 장기력</div>
         </div>
       </div>
     </section>
 
-    <!-- 본문 -->
     <div class="content-main">
 
-      <!-- 사건 정리 -->
       <section class="section" id="overview">
         <div class="section-head">
           <h2>사건정리 · OVERVIEW</h2>
-          <span class="code">URB / OVR-01</span>
+          <span class="code">JRB / OVR-01</span>
         </div>
         <div class="overview">
-          <p><strong>2026년 4월 17일 03시 17분 KST</strong>, 본 지구(Ω-2026)의 시공간에 다른 좌표계의 지구 — <strong>Ψ-13.0.1.5.12</strong> — 가 중첩되는 현상이 관측되었다. 이 현상은 <strong>합일(合一)</strong>로 명명되었다.</p>
-          <p>두 지구의 물리적·생체적 정보가 동일 좌표에 공존 중이며, 모든 개인에게 본인과 동일한 생체 식별자를 가진 <strong>평행자아</strong>가 나타날 수 있다. 본 현상은 관측 약 <strong>48시간</strong> 후 자연 종결될 것으로 추정되며, 이 시점을 <strong>재림(再臨)</strong>이라 명명한다.</p>
-          <p>현재까지의 관측에 따르면, 재림 직후에는 동일 식별자 간 <span class="redacted">████████</span>이 발생하는 것으로 추정되나, 정부는 이에 대한 공식 입장을 보류한다. 민간에 유포된 일부 소문은 사실이 아니거나 <span class="redacted">█████████████</span>.</p>
-          <p class="term-note">※ 본 페이지는 임시 공개 문서이며, 이후 사건파일 2·3·4는 상황에 따라 순차적으로 해제된다.</p>
+          <p>관측 기준 약 <strong>48시간 전</strong>, 두 좌표계의 지구 — 그레고리력을 따르는 <strong>Ω-2026</strong> 과 마야 장기력을 따르는 <strong>Ψ-13.0.1.5.12</strong> — 가 동일 공간에 중첩되는 현상이 양측에서 동시에 관측되었다. 본 현상은 양 지구의 합의 하에 <strong>합일(合一)</strong>로 명명되었다.</p>
+          <p>두 지구의 물리적·생체적 정보가 같은 좌표에 공존 중이며, 양 지구의 모든 주민에게는 자신과 동일한 생체 식별자를 가진 <strong>평행자아</strong>가 존재할 수 있다. 본 현상은 약 <strong>48시간</strong> 후 자연 종결될 것으로 추정되며, 해당 시점을 <strong>재림(再臨)</strong>이라 명명한다.</p>
+          <p>현재까지의 관측에 따르면, 재림 직후에는 동일 식별자 간 <span class="redacted">████████</span>이 발생할 가능성이 제기되나, 양 지구 공동대응본부는 확증된 결론을 보류한다. 민간에 유포된 일부 소문은 양 측 모두에서 <span class="redacted">█████████████</span>.</p>
+          <p class="term-note">※ 본 문서는 양 지구의 중립적 공동 명의로 작성되었으며, 이후 사건파일 2·3·4는 상황에 따라 순차 해제된다.</p>
         </div>
       </section>
 
-      <!-- 사건파일 -->
       <section class="section" id="cases">
         <div class="section-head">
           <h2>사건파일 · CASE FILES</h2>
-          <span class="code">URB / CSF-04</span>
+          <span class="code">JRB / CSF-04</span>
         </div>
         <div class="file-list">
           <a class="file-item" data-case="1">
             <div class="file-num">#01</div>
             <div class="file-info">
               <div class="file-title">거울 앞의 첫 조우</div>
-              <div class="file-desc">최초 보고 사례 · 시뮬레이션 재현</div>
+              <div class="file-desc">양 지구 공통 보고 · 시뮬레이션</div>
             </div>
             <div class="file-status open">▷ 열람</div>
           </a>
@@ -1391,84 +828,84 @@ footer .gov-seal {
         </div>
       </section>
 
-      <!-- 용어정리 -->
       <section class="section" id="glossary">
         <div class="section-head">
           <h2>용어정리 · GLOSSARY</h2>
-          <span class="code">URB / GLS-07</span>
+          <span class="code">JRB / GLS-07</span>
         </div>
         <div class="glossary">
           <div class="term">
             <div class="term-word">합일 <span class="hanja">(合一 / The Union)</span></div>
-            <div class="term-def">두 개의 지구가 동일 좌표계에 중첩되어 공존하는 현상. 본 사건 전체를 지칭하는 공식 명칭이다.</div>
+            <div class="term-def">두 개의 지구가 동일 좌표계에 중첩되어 공존하는 현상. 본 사건 전체를 지칭하는 공식 명칭이며, 양 지구의 합의에 의해 채택되었다.</div>
           </div>
           <div class="term">
             <div class="term-word">재림 <span class="hanja">(再臨 / The Second Advent)</span></div>
-            <div class="term-def">합일이 종결되는 추정 시점. 현재까지의 관측에 의하면 이 시점에 중복된 존재 중 일부 또는 전부가 소실될 가능성이 있으나 확증된 바는 없다.</div>
+            <div class="term-def">합일이 종결될 것으로 추정되는 시점. 양측 관측에 따르면 해당 시점에 중복된 존재 중 일부 또는 전부가 소실될 가능성이 있으나, 양 지구 모두 확정된 결론은 내리지 않았다.</div>
             <div class="term-note">※ 비공식 호칭: '마지막 나', '그림자 맞이'</div>
           </div>
           <div class="term">
             <div class="term-word">Ω-2026 <span class="hanja">(오메가 지구)</span></div>
-            <div class="term-def">본 문서를 열람 중인 독자가 속한 지구. 2026년 그레고리력을 사용한다. '오메가'는 그리스 문자 Ω로, 관측의 끝 지점에 위치한 좌표계라는 의미에서 명명되었다.</div>
+            <div class="term-def">그레고리력 2026년을 기준 시간축으로 사용하는 지구. 명칭의 '오메가(Ω)'는 그리스 문자이며 순번을 의미하지 않는다.</div>
           </div>
           <div class="term">
             <div class="term-word">Ψ-13.0.1.5.12 <span class="hanja">(프사이 지구)</span></div>
-            <div class="term-def">합일 사건 발생 후 관측된 또 하나의 지구. 마야 장기력(Long Count)을 따르며, 현재 일자는 13.0.1.5.12에 해당한다. '프사이'는 그리스 문자 Ψ로, 관측 주체의 정신·영혼과 조응하는 좌표계라는 뜻으로 명명되었다.</div>
+            <div class="term-def">마야 장기력(Long Count) 13.0.1.5.12를 기준 시간축으로 사용하는 지구. 명칭의 '프사이(Ψ)'는 그리스 문자이며 순번을 의미하지 않는다.</div>
           </div>
           <div class="term">
-            <div class="term-word">※ 지구 번호 관련 공지</div>
-            <div class="term-def">초기 제안된 '제1지구·제2지구', '알파·베타' 등의 명명 체계는 <strong>각 지구의 주민이 상대를 제2·베타로 인정하는 데 동의하지 않아</strong> 폐기되었다. 현재의 Ω·Ψ 명명은 중립적 기호로서 양측의 합의 하에 임시 채택되었다.</div>
-            <div class="term-note">※ Ω도 Ψ도 순번을 의미하지 않는다. 공식적으로는.</div>
+            <div class="term-word">※ 지구 명명 관련 공지</div>
+            <div class="term-def">초기에 제안된 <strong>'제1지구·제2지구'</strong>, <strong>'알파·베타'</strong> 등 순번 기반 명명 체계는 <strong>양 지구 각각이 상대편을 '2' 또는 '베타'로 지칭하는 데 동의하지 않아</strong> 폐기되었다. 현재 사용되는 Ω·Ψ 명명은 순서나 우열을 의미하지 않는 중립 기호로서, 양측의 합의 하에 채택되었다.</div>
+            <div class="term-note">※ 본 문서는 양 지구를 대등한 당사자로 표기하며, 어느 쪽도 '본(本) 지구'로 규정하지 않는다.</div>
           </div>
           <div class="term">
             <div class="term-word">평행자아 <span class="hanja">(Parallel Self)</span></div>
-            <div class="term-def">동일 생체 식별자를 가진 이종 지구의 존재. 합일 이후 물리적으로 조우 가능하다.</div>
+            <div class="term-def">동일한 생체 식별자를 가진 타측 지구의 존재. 합일 기간 중 물리적 조우가 가능하다. 어느 쪽이 '원본'인지에 관한 판단은 양 지구 어느 측도 공식적으로 내리지 않는다.</div>
+          </div>
+          <div class="term">
+            <div class="term-word">공동대응본부 <span class="hanja">(Joint Response Bureau)</span></div>
+            <div class="term-def">합일 개시 직후 양 지구의 공동 명의로 설립된 임시 조정기구. 본 웹페이지를 포함한 모든 공식 문서는 양측 심의를 거쳐 공개된다.</div>
           </div>
         </div>
       </section>
 
-      <!-- 시민 대처요령 -->
       <section class="section" id="guidelines">
         <div class="section-head">
           <h2>시민 대처요령 · CITIZEN GUIDELINES</h2>
-          <span class="code">URB / CTZ-03</span>
+          <span class="code">JRB / CTZ-03</span>
         </div>
         <div class="guidelines">
           <div class="guideline-item">
             <div class="guideline-num">01</div>
-            <div class="guideline-text">재림까지 가능한 한 <strong>자택에 머물 것</strong>. 외출이 필요한 경우 반드시 신분증을 소지하고 이동 경로를 가족에게 공유하십시오.</div>
+            <div class="guideline-text">재림까지 가능한 한 <strong>자택에 머물 것</strong>. 외출이 필요한 경우 반드시 신분증을 소지하고 이동 경로를 가족에게 공유하십시오. <em>(양 지구 공통)</em></div>
           </div>
           <div class="guideline-item">
             <div class="guideline-num">02</div>
-            <div class="guideline-text">본인과 <strong>동일한 외모·이름·생체정보</strong>를 가진 인물을 조우한 경우, 즉시 112 또는 본부 직통번호(URB-1004)로 신고할 것. 직접 접촉은 삼가십시오.</div>
+            <div class="guideline-text">본인과 <strong>동일한 외모·이름·생체정보</strong>를 가진 인물을 조우한 경우, 즉시 각 지구의 긴급 신고번호로 연락할 것. 직접 접촉·대화·갈등은 삼가십시오.</div>
           </div>
           <div class="guideline-item">
             <div class="guideline-num">03</div>
-            <div class="guideline-text">검증되지 않은 민간 소문 — <strong>"먼저 죽이면 살아남는다"</strong> 등 — 에 현혹되지 마십시오. 정부는 이러한 주장에 법적 책임이 없으며, 관련 행위는 현행법상 <strong>살인죄</strong>로 처벌됩니다.</div>
+            <div class="guideline-text">검증되지 않은 민간 소문 — <strong>"먼저 제거하면 자신은 남는다"</strong> 등 — 에 현혹되지 마십시오. 양 지구 모두에서 관련 행위는 현행법상 <strong>살인죄</strong>에 해당하며, 소문의 진위 또한 확인되지 않았습니다.</div>
           </div>
           <div class="guideline-item">
             <div class="guideline-num">04</div>
-            <div class="guideline-text">식료품·의약품·현금을 <strong>3일분 이상</strong> 준비하고, 긴급방송(FM 97.1 / AM 603)을 주기적으로 청취하십시오.</div>
+            <div class="guideline-text">식료품·의약품·현금을 <strong>3일분 이상</strong> 준비하고, 각 지구의 긴급방송을 주기적으로 청취하십시오.</div>
           </div>
           <div class="guideline-item">
             <div class="guideline-num">05</div>
-            <div class="guideline-text">반사면(거울·수면·유리창 등)을 통해 본인이 아닌 형상이 관측될 경우 즉시 본부에 신고하고, 당해 반사면을 가리십시오.</div>
+            <div class="guideline-text">반사면(거울·수면·유리창 등)을 통해 본인이 아닌 형상이 관측될 경우, 즉시 본부에 신고하고 해당 반사면을 가리십시오.</div>
           </div>
           <div class="guideline-item">
             <div class="guideline-num">06</div>
-            <div class="guideline-text">종교 집회·군중 집회 참석을 자제하고, 일부 단체(자칭 '합일교' 등)의 포교 활동에 응하지 마십시오.</div>
+            <div class="guideline-text">종교 집회·군중 집회 참석을 자제하고, 일부 비인가 단체(자칭 '합일교' 등)의 포교 활동에 응하지 마십시오. 해당 단체는 양 지구 모두에서 공식적으로 인가되지 않았습니다.</div>
           </div>
           <div class="guideline-item">
             <div class="guideline-num">07</div>
-            <div class="guideline-text">심리적 불안을 겪는 경우 24시간 정신건강 위기상담 전화(1577-0199)를 이용하십시오.</div>
+            <div class="guideline-text">심리적 불안을 겪는 경우 각 지구의 24시간 정신건강 위기상담 창구를 이용하십시오.</div>
           </div>
         </div>
       </section>
     </div>
 
-    <!-- 사이드바 -->
     <aside>
-      <!-- 로그인 -->
       <div class="sidebar-section" id="login">
         <div class="sidebar-head">ADMIN LOGIN</div>
         <div class="login-box">
@@ -1478,38 +915,40 @@ footer .gov-seal {
         </div>
       </div>
 
-      <!-- 뉴스 -->
       <div class="sidebar-section" id="news">
         <div class="sidebar-head">현재 뉴스 · LIVE FEED</div>
         <div class="news-list">
           <div class="news-item">
-            <div class="news-time">04/17 · 03:17 KST</div>
-            <div class="news-headline"><span class="tag">속보</span>서울·경기 전역에서 동일인 조우 신고 폭증</div>
+            <div class="news-time">T-48:00 · JOINT</div>
+            <div class="news-headline"><span class="tag">속보</span>양 지구에서 동시 관측 — 합일사건 공식 확인</div>
           </div>
           <div class="news-item">
-            <div class="news-time">04/17 · 05:42 KST</div>
-            <div class="news-headline"><span class="tag">공식</span>합일사건 대응본부 출범 — 48시간 특별경보 발령</div>
+            <div class="news-time">T-46:18 · JOINT</div>
+            <div class="news-headline"><span class="tag">공식</span>합일사건 공동대응본부 출범 — 48시간 특별 공조체제</div>
           </div>
           <div class="news-item">
-            <div class="news-time">04/17 · 08:10 KST</div>
-            <div class="news-headline">자칭 '합일교' 온라인 가입자 하루새 12만 돌파</div>
+            <div class="news-time">T-44:33 · Ω</div>
+            <div class="news-headline"><span class="tag alt">Ω</span>오메가 지구, 동일인 조우 신고 급증</div>
           </div>
           <div class="news-item">
-            <div class="news-time">04/17 · 11:23 KST</div>
-            <div class="news-headline">마야 장기력 전문가들 "Ψ-13.0.1.5.12, 고전기 마야 멸망 직후 시점"</div>
+            <div class="news-time">T-42:10 · Ψ</div>
+            <div class="news-headline"><span class="tag alt">Ψ</span>프사이 지구, 동일 현상 — 의식 전 대비 태세 격상</div>
           </div>
           <div class="news-item">
-            <div class="news-time">04/17 · 14:58 KST</div>
-            <div class="news-headline"><span class="tag">주의</span>"먼저 죽이면 살아남는다" 유언비어 확산 — 경찰 수사 착수</div>
+            <div class="news-time">T-40:27 · JOINT</div>
+            <div class="news-headline">자칭 '합일교' 양 지구 모두에서 활동 확인 — 비인가 단체</div>
           </div>
           <div class="news-item">
-            <div class="news-time">04/17 · 19:04 KST</div>
-            <div class="news-headline">거울·유리 매출 급감, 반대로 검은 천 품귀현상</div>
+            <div class="news-time">T-37:55 · JOINT</div>
+            <div class="news-headline"><span class="tag">주의</span>"먼저 제거하면 살아남는다" 유언비어 확산 — 양 지구 수사 공조</div>
+          </div>
+          <div class="news-item">
+            <div class="news-time">T-34:41 · JOINT</div>
+            <div class="news-headline">거울·유리 관련 품목 품귀 — 양 지구 유통 이상 동향</div>
           </div>
         </div>
       </div>
 
-      <!-- 공식 인장 -->
       <div class="sidebar-section">
         <div class="sidebar-head">OFFICIAL SEAL</div>
         <svg viewBox="0 0 200 200" style="width:100%;">
@@ -1517,8 +956,8 @@ footer .gov-seal {
           <circle cx="100" cy="100" r="75" fill="none" stroke="var(--seal)" stroke-width="0.5"/>
           <text x="100" y="115" text-anchor="middle" fill="var(--seal)" font-family="serif" font-size="58" font-weight="900">合</text>
           <g font-family="monospace" font-size="7" fill="var(--seal)" letter-spacing="2">
-            <text x="100" y="22" text-anchor="middle">UNION RESPONSE BUREAU</text>
-            <text x="100" y="185" text-anchor="middle">Ω - 2026 / OFFICIAL</text>
+            <text x="100" y="22" text-anchor="middle">JOINT RESPONSE BUREAU</text>
+            <text x="100" y="185" text-anchor="middle">Ω ∩ Ψ · NEUTRAL</text>
           </g>
           <line x1="35" y1="100" x2="50" y2="100" stroke="var(--seal)" stroke-width="0.5"/>
           <line x1="150" y1="100" x2="165" y2="100" stroke="var(--seal)" stroke-width="0.5"/>
@@ -1528,14 +967,13 @@ footer .gov-seal {
   </main>
 
   <footer>
-    <div class="gov-seal">合 · UNION RESPONSE BUREAU</div>
-    <div>© 2026 합일사건 대응본부 · Ω-2026 임시 행정문서</div>
-    <div>본 문서의 정보는 관측 시점 기준이며, 재림 이후 갱신되지 않을 수 있습니다.</div>
-    <div style="margin-top: 0.8rem; opacity: 0.4;">URB-2026-0417-001 · DECLASSIFIED FOR PUBLIC VIEWING</div>
+    <div class="gov-seal">合 · JOINT RESPONSE BUREAU</div>
+    <div>© 합일사건 공동대응본부 · Ω ∩ Ψ 공동 명의 임시문서</div>
+    <div>본 문서는 양 지구의 중립적 입장에서 작성되었으며, 어느 측도 우선 지위를 주장하지 않습니다.</div>
+    <div style="margin-top: 0.8rem; opacity: 0.4;">JRB-C-0417-001 · DECLASSIFIED FOR PUBLIC VIEWING</div>
   </footer>
 </div>
 
-<!-- ====================== 잠금 모달 ====================== -->
 <div class="modal-overlay" id="lockModal">
   <div class="modal">
     <h3 id="modalTitle">접근 제한 · RESTRICTED</h3>
@@ -1549,7 +987,6 @@ footer .gov-seal {
   </div>
 </div>
 
-<!-- ====================== 미니게임 진입 화면 (자리) ====================== -->
 <div id="game-screen">
   <div class="game-pending">
     <h2>CASE FILE #01 — LOADING</h2>
@@ -1560,14 +997,6 @@ footer .gov-seal {
 </div>
 
 <script>
-/* ============================================================
-   SHA-256 해시 검증 시스템
-   ADMIN01 -> f62a98dfab5114dd4a32a7a4b740f61115a5f36966d008fa199f89f145906dfa
-   ADMIN02 -> aa5ea4f23f8a63500b01faefac7ded70dd1955f6acd3a8a3d5cbbb5c6f5e0852
-   ADMIN03 -> 63dbf491ccca66bcc39e8baf04fb622f659f94dfe8e2286a839ae5582422c8c3
-   ADMIN04 -> dd33b3a91f7f4e8a90418cbf9f56356cb3e4a2db8b768d123c59ec8910c2327a
-   ============================================================ */
-
 const HASHES = {
   login:  'f62a98dfab5114dd4a32a7a4b740f61115a5f36966d008fa199f89f145906dfa',
   case2:  'aa5ea4f23f8a63500b01faefac7ded70dd1955f6acd3a8a3d5cbbb5c6f5e0852',
@@ -1578,14 +1007,9 @@ const HASHES = {
 async function sha256(text) {
   const buffer = new TextEncoder().encode(text);
   const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
+  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-/* ============================================================
-   인트로 슬라이드쇼
-   ============================================================ */
 const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.dot');
 let currentSlide = 0;
@@ -1597,26 +1021,14 @@ function showSlide(i) {
   currentSlide = i;
   slides[currentSlide].classList.add('active');
   dots[currentSlide].classList.add('active');
-
-  // 마지막 슬라이드면 버튼 텍스트 변경
-  const btn = document.getElementById('nextBtn');
-  btn.textContent = (i === slides.length - 1) ? '진입 · ENTER ▷' : 'NEXT ▷';
+  document.getElementById('nextBtn').textContent = (i === slides.length - 1) ? '진입 · ENTER ▷' : 'NEXT ▷';
 }
 
 document.getElementById('nextBtn').addEventListener('click', () => {
-  if (currentSlide === slides.length - 1) {
-    endIntro();
-  } else {
-    showSlide(currentSlide + 1);
-  }
+  if (currentSlide === slides.length - 1) endIntro();
+  else showSlide(currentSlide + 1);
 });
-
-dots.forEach(d => {
-  d.addEventListener('click', () => {
-    showSlide(parseInt(d.dataset.go));
-  });
-});
-
+dots.forEach(d => d.addEventListener('click', () => showSlide(parseInt(d.dataset.go))));
 document.getElementById('skipBtn').addEventListener('click', endIntro);
 
 function endIntro() {
@@ -1629,31 +1041,35 @@ function endIntro() {
   }, 600);
 }
 
-// 키보드 조작
 document.addEventListener('keydown', (e) => {
   if (document.getElementById('intro').style.display === 'none') return;
   if (e.key === 'ArrowRight' || e.key === ' ') {
     e.preventDefault();
     if (currentSlide === slides.length - 1) endIntro();
     else showSlide(currentSlide + 1);
-  } else if (e.key === 'ArrowLeft') {
-    showSlide(currentSlide - 1);
-  } else if (e.key === 'Escape') {
-    endIntro();
-  }
+  } else if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+  else if (e.key === 'Escape') endIntro();
 });
 
-/* ============================================================
-   카운트다운 (재림까지 48시간)
-   ============================================================ */
-// 세션 시작 시각 기준 48시간 뒤를 타겟으로 (localStorage로 지속)
+let touchStartX = 0;
+document.getElementById('intro').addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+document.getElementById('intro').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(dx) < 50) return;
+  if (dx < 0) {
+    if (currentSlide === slides.length - 1) endIntro();
+    else showSlide(currentSlide + 1);
+  } else showSlide(currentSlide - 1);
+}, { passive: true });
+
 const TARGET_KEY = 'urb_target_2026';
 let target = parseInt(localStorage.getItem(TARGET_KEY));
 if (!target || isNaN(target) || target < Date.now()) {
   target = Date.now() + 48 * 60 * 60 * 1000;
   localStorage.setItem(TARGET_KEY, target.toString());
 }
-
 function updateCountdown() {
   const diff = Math.max(0, target - Date.now());
   const hh = Math.floor(diff / 3600000);
@@ -1666,58 +1082,49 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// 최종 갱신 시각
 const now = new Date();
 const pad = n => String(n).padStart(2, '0');
 document.getElementById('lastUpdate').textContent =
-  `2026-04-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())} KST`;
+  `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())} JRB`;
 
-/* ============================================================
-   테마 토글
-   ============================================================ */
-const themeBtn = document.getElementById('themeToggle');
-themeBtn.addEventListener('click', () => {
+document.getElementById('themeToggle').addEventListener('click', () => {
   const cur = document.body.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.body.setAttribute('data-theme', next);
+  document.body.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
 });
 
-/* ============================================================
-   로그인 (SHA-256)
-   ============================================================ */
+const menuBtn = document.getElementById('mobileMenuBtn');
+const navEl = document.getElementById('primaryNav');
+const backdrop = document.getElementById('navBackdrop');
+const navClose = document.getElementById('navClose');
+
+function openNav() { navEl.classList.add('open'); backdrop.classList.add('active'); }
+function closeNav() { navEl.classList.remove('open'); backdrop.classList.remove('active'); }
+
+menuBtn.addEventListener('click', openNav);
+navClose.addEventListener('click', closeNav);
+backdrop.addEventListener('click', closeNav);
+
 const loginBtn = document.getElementById('loginBtn');
 const loginInput = document.getElementById('loginInput');
 const loginMsg = document.getElementById('loginMsg');
 
 async function tryLogin() {
   const val = loginInput.value.trim();
-  if (!val) {
-    loginMsg.textContent = '비밀번호를 입력하십시오.';
-    loginMsg.className = 'login-msg error';
-    return;
-  }
+  if (!val) { loginMsg.textContent = '비밀번호를 입력하십시오.'; loginMsg.className = 'login-msg error'; return; }
   const h = await sha256(val);
   if (h === HASHES.login) {
     loginMsg.textContent = '✓ 인증 완료 — 추가 권한은 곧 공개됩니다.';
     loginMsg.className = 'login-msg ok';
-    loginInput.value = '';
-    loginInput.disabled = true;
-    loginBtn.disabled = true;
+    loginInput.value = ''; loginInput.disabled = true; loginBtn.disabled = true;
     loginBtn.textContent = 'AUTHENTICATED';
   } else {
     loginMsg.textContent = '✗ 인증 실패 — 권한 없음';
     loginMsg.className = 'login-msg error';
   }
 }
-
 loginBtn.addEventListener('click', tryLogin);
-loginInput.addEventListener('keypress', e => {
-  if (e.key === 'Enter') tryLogin();
-});
+loginInput.addEventListener('keypress', e => { if (e.key === 'Enter') tryLogin(); });
 
-/* ============================================================
-   사건파일 클릭 처리
-   ============================================================ */
 const modalOverlay = document.getElementById('lockModal');
 const modalInput = document.getElementById('modalInput');
 const modalMsg = document.getElementById('modalMsg');
@@ -1732,15 +1139,12 @@ document.querySelectorAll('.file-item').forEach(item => {
   item.addEventListener('click', e => {
     e.preventDefault();
     const caseNum = parseInt(item.dataset.case);
-    if (caseNum === 1) {
-      openGameScreen();
-    } else {
+    if (caseNum === 1) openGameScreen();
+    else {
       activeCaseNum = caseNum;
       modalTitle.textContent = `사건파일 #0${caseNum} · 접근 제한`;
-      modalDesc.textContent = '본 문서는 분류 등급 이상 권한이 필요합니다. 접근 키를 입력하십시오.';
-      modalInput.value = '';
-      modalMsg.textContent = '';
-      modalMsg.className = 'modal-msg';
+      modalDesc.textContent = '본 문서는 양 지구 공동 분류 등급 이상 권한이 필요합니다. 접근 키를 입력하십시오.';
+      modalInput.value = ''; modalMsg.textContent = ''; modalMsg.className = 'modal-msg';
       modalOverlay.classList.add('active');
       setTimeout(() => modalInput.focus(), 100);
     }
@@ -1749,14 +1153,9 @@ document.querySelectorAll('.file-item').forEach(item => {
 
 async function submitModal() {
   const val = modalInput.value.trim();
-  if (!val) {
-    modalMsg.textContent = '키를 입력하십시오.';
-    modalMsg.className = 'modal-msg error';
-    return;
-  }
+  if (!val) { modalMsg.textContent = '키를 입력하십시오.'; modalMsg.className = 'modal-msg error'; return; }
   const h = await sha256(val);
-  const expected = HASHES['case' + activeCaseNum];
-  if (h === expected) {
+  if (h === HASHES['case' + activeCaseNum]) {
     modalMsg.textContent = '✓ 인증 완료 — 해당 문서는 추후 업데이트로 공개됩니다.';
     modalMsg.className = 'modal-msg ok';
   } else {
@@ -1764,44 +1163,26 @@ async function submitModal() {
     modalMsg.className = 'modal-msg error';
   }
 }
-
 modalSubmit.addEventListener('click', submitModal);
-modalCancel.addEventListener('click', () => {
-  modalOverlay.classList.remove('active');
-});
-modalInput.addEventListener('keypress', e => {
-  if (e.key === 'Enter') submitModal();
-});
-modalOverlay.addEventListener('click', e => {
-  if (e.target === modalOverlay) modalOverlay.classList.remove('active');
-});
+modalCancel.addEventListener('click', () => modalOverlay.classList.remove('active'));
+modalInput.addEventListener('keypress', e => { if (e.key === 'Enter') submitModal(); });
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); });
 
-/* ============================================================
-   미니게임 진입 화면
-   ============================================================ */
-function openGameScreen() {
-  document.getElementById('game-screen').classList.add('active');
-}
-document.getElementById('gameBack').addEventListener('click', () => {
-  document.getElementById('game-screen').classList.remove('active');
-});
+function openGameScreen() { document.getElementById('game-screen').classList.add('active'); }
+document.getElementById('gameBack').addEventListener('click', () => document.getElementById('game-screen').classList.remove('active'));
 
-/* ============================================================
-   네비게이션 스무스 스크롤
-   ============================================================ */
 document.querySelectorAll('.nav-inner a').forEach(a => {
   a.addEventListener('click', e => {
     const href = a.getAttribute('href');
     if (href && href.startsWith('#')) {
       e.preventDefault();
+      closeNav();
       const el = document.querySelector(href);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
     }
   });
 });
-
 </script>
 
 </body>
 </html>
-

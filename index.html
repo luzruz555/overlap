@@ -1536,19 +1536,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 </div>
 
 <script>
-/* ============================================================
-   📢 긴급뉴스 티커 — 여기만 수정하면 됩니다
-   ============================================================
-   태그 종류:
-     - 'urgent'  : 흰 배경 + 깜빡임 (최우선)
-     - 'default' : 검은 배경 (기본)
-     - 'omega'   : Ω 지구 단독 (실선 테두리)
-     - 'psi'     : Ψ 지구 단독 (점선 테두리)
-     - 'joint'   : 양 지구 공동
 
-   속도(초): TICKER_DURATION_SECONDS
-     - 숫자 작을수록 빠름. 60 정도가 적당, 90이면 느긋
-   ============================================================ */
 
 const BREAKING_NEWS = [
   { tag: 'urgent',  label: '긴급',   text: '합일사건 공동대응본부 비상경보 발령 — 양 지구 모든 시민 대처요령 즉시 숙지 요망' },
@@ -2028,81 +2016,7 @@ function openGameScreen() {
 
   if (saved && saved.completed) {
     // 재진입: 전체 즉시 펼침
-    trFullReveal = true;
-    renderAll();
-  } else {
-    trFullReveal = false;
-    advanceTranscript();
-  }
-}
-
-function saveTrState() {
-  try {
-    localStorage.setItem(TR_STATE_KEY, JSON.stringify({ completed: true }));
-  } catch(e) {}
-}
-
-function loadTrState() {
-  try {
-    const raw = localStorage.getItem(TR_STATE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch(e) { return null; }
-}
-
-function renderLine(line, animate = true) {
-  const body = document.getElementById('trBody');
-
-  if (line.type === 'start' || line.type === 'end') {
-    const el = document.createElement('div');
-    el.className = line.type === 'start' ? 'tr-body-start' : 'tr-body-end';
-    el.textContent = line.text;
-    if (!animate) el.style.animation = 'none';
-    body.appendChild(el);
-    return;
-  }
-
-  if (line.type === 'break') {
-    const el = document.createElement('div');
-    el.className = 'tr-line section-break';
-    el.innerHTML = `<div></div><div class="tr-content">${line.text}</div>`;
-    if (!animate) el.style.animation = 'none';
-    body.appendChild(el);
-    return;
-  }
-
-  if (line.type === 'glitch') {
-    const el = document.createElement('div');
-    el.className = 'tr-line glitch';
-    el.innerHTML = `<div class="tr-speaker meta">※</div><div class="tr-content">${line.text}</div>`;
-    if (!animate) el.style.animation = 'none';
-    body.appendChild(el);
-    return;
-  }
-
-  if (line.type === 'memo') {
-    const el = document.createElement('div');
-    el.className = 'tr-line memo';
-    el.innerHTML = `<div class="tr-speaker meta"></div><div class="tr-content">${line.text}</div>`;
-    if (!animate) el.style.animation = 'none';
-    body.appendChild(el);
-    return;
-  }
-
-  if (line.type === 'line') {
-    const el = document.createElement('div');
-    el.className = 'tr-line';
-    const spkLabel = SPK[line.spk] || line.spk;
-    const spkClass = line.spk;
-    el.innerHTML = `<div class="tr-speaker ${spkClass}">${spkLabel}</div><div class="tr-content">${line.text}</div>`;
-    if (!animate) el.style.animation = 'none';
-    body.appendChild(el);
-    return;
-  }
-}
-
-function advanceTranscript() {
-  const advance = document.getElementById('trAdvance');
-  advance.classList.remove('show');
+    
 
   // 'pause'까지 렌더링
   while (trIndex < TRANSCRIPT.length) {

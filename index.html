@@ -137,20 +137,121 @@ body::before {
 /* ========== 메인 ========== */
 #main-site { opacity: 0; transition: opacity 0.6s ease; position: relative; z-index: 2; }
 #main-site.revealed { opacity: 1; }
-.emergency-bar {
-  background: var(--accent); color: #f5f4f1;
-  text-align: center; padding: 0.5rem 1rem;
-  font-family: var(--font-mono); font-size: 0.7rem;
-  letter-spacing: 0.12em; border-bottom: 1px solid var(--line);
-  position: relative; overflow: hidden;
+
+/* ========== 긴급뉴스 티커 (방송 스타일) ========== */
+.news-ticker {
+  background: var(--accent);
+  color: #f5f4f1;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  height: 36px;
 }
-.emergency-bar::before {
-  content: ''; position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px);
-  animation: slide-stripe 3s linear infinite;
+
+.ticker-label {
+  background: #000;
+  color: #f5f4f1;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  flex-shrink: 0;
+  border-right: 2px solid var(--line);
+  position: relative;
+  z-index: 3;
 }
-@keyframes slide-stripe { 0% { transform: translateX(0); } 100% { transform: translateX(40px); } }
-.emergency-bar span { position: relative; }
+
+.ticker-label::before {
+  content: '●';
+  color: var(--accent);
+  animation: blink-dot 1s infinite;
+  font-size: 0.7rem;
+}
+
+@keyframes blink-dot {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.2; }
+}
+
+.ticker-viewport {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-viewport::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.08) 20px, rgba(0,0,0,0.08) 40px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: ticker-scroll var(--ticker-duration, 60s) linear infinite;
+  will-change: transform;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: #f5f4f1;
+  border-right: 1px solid rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+
+.ticker-item:last-child { border-right: none; }
+
+.ticker-item .t-tag {
+  background: #000;
+  color: #fff;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ticker-item .t-tag.urgent {
+  background: #fff;
+  color: var(--accent);
+  animation: pulse-urgent 0.8s infinite;
+}
+
+@keyframes pulse-urgent {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.ticker-item .t-tag.omega { background: transparent; border: 1px solid #fff; }
+.ticker-item .t-tag.psi { background: transparent; border: 1px dashed #fff; }
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.news-ticker:hover .ticker-track,
+.news-ticker:active .ticker-track {
+  animation-play-state: paused;
+}
 
 header { border-bottom: 2px solid var(--line); background: var(--bg-panel); position: relative; }
 .header-inner {
@@ -504,16 +605,22 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
   .nav-close { display: block; }
 
   main { padding: 1.2rem 1rem 2rem; }
-  .countdown-hero { padding: 1.3rem 1rem; }
-  .countdown-display { justify-content: center; }
+  .countdown-hero { padding: 1.3rem 0.9rem; }
+  .countdown-display { justify-content: center; gap: 0.3rem; }
   .countdown-unit { max-width: none; }
+  .countdown-num { font-size: clamp(1.5rem, 6.5vw, 2.2rem); }
+  .countdown-sep { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+  .countdown-small { font-size: 0.55rem; letter-spacing: 0.12em; }
   .earth-status { grid-template-columns: 1fr; gap: 0.7rem; }
   .merge-indicator { transform: rotate(90deg); font-size: 1.6rem; padding: 0.3rem 0; }
   .section { padding: 1.2rem 1rem; }
   .section-head { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
   .file-item { grid-template-columns: 44px 1fr; gap: 0.6rem; }
   .file-status { grid-column: 1 / -1; justify-self: start; font-size: 0.6rem; padding: 0.2rem 0.5rem; margin-top: 0.2rem; }
-  .emergency-bar { font-size: 0.62rem; padding: 0.45rem 0.8rem; letter-spacing: 0.08em; }
+  .news-ticker { height: 32px; }
+  .ticker-label { padding: 0 0.7rem; font-size: 0.6rem; letter-spacing: 0.15em; }
+  .ticker-item { padding: 0 1.2rem; font-size: 0.65rem; gap: 0.4rem; }
+  .ticker-item .t-tag { font-size: 0.55rem; padding: 0.08rem 0.35rem; }
   .slide { padding: 3.5rem 1rem 4.5rem; }
   .slide-frame { max-height: 40vh; }
   .intro-nav { padding: 0 1rem; flex-direction: row; gap: 0.8rem; }
@@ -522,8 +629,9 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 }
 
 @media (max-width: 400px) {
-  .countdown-num { font-size: 2rem; }
-  .countdown-sep { font-size: 1.6rem; }
+  .countdown-num { font-size: 1.4rem; }
+  .countdown-sep { font-size: 1.1rem; }
+  .countdown-small { font-size: 0.5rem; }
   .slide-text h2 { font-size: 1rem; }
   .slide-text p { font-size: 0.78rem; }
   .brand-text h1 { font-size: 0.9rem; }
@@ -657,9 +765,11 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
     <div class="slide-frame">
       <svg class="slide-svg" viewBox="0 0 720 450" preserveAspectRatio="xMidYMid meet">
         <rect class="panel-dark" width="720" height="450"/>
-        <text x="360" y="160" text-anchor="middle" class="panel-muted" font-size="12" letter-spacing="4">TIME UNTIL 再臨</text>
-        <text x="360" y="280" text-anchor="middle" class="panel-accent" font-size="96" font-weight="700" font-family="IBM Plex Mono">48:00:00</text>
-        <text x="360" y="330" text-anchor="middle" class="panel-text" font-size="11" letter-spacing="3">PENDING FURTHER INFORMATION.</text>
+        <text x="360" y="130" text-anchor="middle" class="panel-muted" font-size="12" letter-spacing="4">TIME UNTIL 再臨</text>
+        <text x="360" y="150" text-anchor="middle" class="panel-muted" font-size="9" letter-spacing="2">DAYS : HOURS : MINUTES : SECONDS</text>
+        <text x="360" y="270" text-anchor="middle" class="panel-accent" font-size="72" font-weight="700" font-family="IBM Plex Mono" id="intro-timer">00:00:00:00</text>
+        <text x="360" y="320" text-anchor="middle" class="panel-text" font-size="11" letter-spacing="3">TARGET: 2026.05.05 00:00 KST</text>
+        <text x="360" y="345" text-anchor="middle" class="panel-muted" font-size="10" letter-spacing="2">PENDING FURTHER INFORMATION.</text>
         <path d="M 40 40 L 40 80 M 40 40 L 80 40" stroke="#c83c3c" stroke-width="1.5"/>
         <path d="M 680 40 L 680 80 M 680 40 L 640 40" stroke="#c83c3c" stroke-width="1.5"/>
         <path d="M 40 410 L 40 370 M 40 410 L 80 410" stroke="#c83c3c" stroke-width="1.5"/>
@@ -668,7 +778,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
     </div>
     <div class="slide-text">
       <h2>재림(再臨)까지</h2>
-      <p>남은 시간 <span class="highlight">약 48시간.</span><br>
+      <p>남은 시간 <span class="highlight" id="intro-remain-text">계산 중…</span><br>
       본 문서는 양 지구의 공동 임시기구<br><strong>합일사건 공동대응본부</strong>에 의해 공개된 중립 안내문이다.</p>
     </div>
   </div>
@@ -688,8 +798,13 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 <!-- 메인 -->
 <div id="main-site">
 
-  <div class="emergency-bar">
-    <span>⚠ 공지 · 합일사건 공동대응본부 긴급 안내 — 양 지구 모든 시민은 '대처요령' 숙지 요망 ⚠</span>
+  <div class="news-ticker" id="newsTicker">
+    <div class="ticker-label">BREAKING</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack">
+        <!-- JS가 동적으로 채움 -->
+      </div>
+    </div>
   </div>
 
   <header>
@@ -739,10 +854,15 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
   <main>
     <section class="countdown-hero">
       <div class="countdown-label">T-MINUS · 재림(再臨)까지</div>
-      <div class="countdown-title">The Second Advent — Estimated Time Remaining</div>
+      <div class="countdown-title">The Second Advent — 2026.05.05 00:00 KST</div>
       <div class="countdown-display">
         <div class="countdown-unit">
-          <div class="countdown-num" id="t-hh">48</div>
+          <div class="countdown-num" id="t-dd">00</div>
+          <div class="countdown-small">DAYS</div>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-num" id="t-hh">00</div>
           <div class="countdown-small">HOURS</div>
         </div>
         <div class="countdown-sep">:</div>
@@ -780,8 +900,8 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
           <span class="code">JRB / OVR-01</span>
         </div>
         <div class="overview">
-          <p>관측 기준 약 <strong>48시간 전</strong>, 두 좌표계의 지구 — 그레고리력을 따르는 <strong>Ω-2026</strong> 과 마야 장기력을 따르는 <strong>Ψ-13.0.1.5.12</strong> — 가 동일 공간에 중첩되는 현상이 양측에서 동시에 관측되었다. 본 현상은 양 지구의 합의 하에 <strong>합일(合一)</strong>로 명명되었다.</p>
-          <p>두 지구의 물리적·생체적 정보가 같은 좌표에 공존 중이며, 양 지구의 모든 주민에게는 자신과 동일한 생체 식별자를 가진 <strong>평행자아</strong>가 존재할 수 있다. 본 현상은 약 <strong>48시간</strong> 후 자연 종결될 것으로 추정되며, 해당 시점을 <strong>재림(再臨)</strong>이라 명명한다.</p>
+          <p>관측 개시 이후, 두 좌표계의 지구 — 그레고리력을 따르는 <strong>Ω-2026</strong> 과 마야 장기력을 따르는 <strong>Ψ-13.0.1.5.12</strong> — 가 동일 공간에 중첩되는 현상이 양측에서 동시에 관측되었다. 본 현상은 양 지구의 합의 하에 <strong>합일(合一)</strong>로 명명되었다.</p>
+          <p>두 지구의 물리적·생체적 정보가 같은 좌표에 공존 중이며, 양 지구의 모든 주민에게는 자신과 동일한 생체 식별자를 가진 <strong>평행자아</strong>가 존재할 수 있다. 본 현상은 <strong>2026년 5월 5일 00:00 KST</strong>를 기점으로 자연 종결될 것으로 추정되며, 해당 시점을 <strong>재림(再臨)</strong>이라 명명한다.</p>
           <p>현재까지의 관측에 따르면, 재림 직후에는 동일 식별자 간 <span class="redacted">████████</span>이 발생할 가능성이 제기되나, 양 지구 공동대응본부는 확증된 결론을 보류한다. 민간에 유포된 일부 소문은 양 측 모두에서 <span class="redacted">█████████████</span>.</p>
           <p class="term-note">※ 본 문서는 양 지구의 중립적 공동 명의로 작성되었으며, 이후 사건파일 2·3·4는 상황에 따라 순차 해제된다.</p>
         </div>
@@ -841,7 +961,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
           <div class="term">
             <div class="term-word">재림 <span class="hanja">(再臨 / The Second Advent)</span></div>
             <div class="term-def">합일이 종결될 것으로 추정되는 시점. 양측 관측에 따르면 해당 시점에 중복된 존재 중 일부 또는 전부가 소실될 가능성이 있으나, 양 지구 모두 확정된 결론은 내리지 않았다.</div>
-            <div class="term-note">※ '추정'이며 확실하지 않음 </div>
+            <div class="term-note">※ 비공식 호칭: '마지막 나', '그림자 맞이'</div>
           </div>
           <div class="term">
             <div class="term-word">Ω-2026 <span class="hanja">(오메가 지구)</span></div>
@@ -891,10 +1011,14 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
           </div>
           <div class="guideline-item">
             <div class="guideline-num">05</div>
-            <div class="guideline-text">종교 집회·군중 집회 참석을 자제하고, 일부 비인가 단체(자칭 '합일교' 등)의 포교 활동에 응하지 마십시오. 해당 단체는 양 지구 모두에서 공식적으로 인가되지 않았습니다.</div>
+            <div class="guideline-text">반사면(거울·수면·유리창 등)을 통해 본인이 아닌 형상이 관측될 경우, 즉시 본부에 신고하고 해당 반사면을 가리십시오.</div>
           </div>
           <div class="guideline-item">
             <div class="guideline-num">06</div>
+            <div class="guideline-text">종교 집회·군중 집회 참석을 자제하고, 일부 비인가 단체(자칭 '합일교' 등)의 포교 활동에 응하지 마십시오. 해당 단체는 양 지구 모두에서 공식적으로 인가되지 않았습니다.</div>
+          </div>
+          <div class="guideline-item">
+            <div class="guideline-num">07</div>
             <div class="guideline-text">심리적 불안을 겪는 경우 각 지구의 24시간 정신건강 위기상담 창구를 이용하십시오.</div>
           </div>
         </div>
@@ -915,32 +1039,32 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
         <div class="sidebar-head">현재 뉴스 · LIVE FEED</div>
         <div class="news-list">
           <div class="news-item">
-            <div class="news-time">T-48:00 · JOINT</div>
+            <div class="news-time">04/17 · 03:17 · JOINT</div>
             <div class="news-headline"><span class="tag">속보</span>양 지구에서 동시 관측 — 합일사건 공식 확인</div>
           </div>
           <div class="news-item">
-            <div class="news-time">T-46:18 · JOINT</div>
-            <div class="news-headline"><span class="tag">공식</span>합일사건 공동대응본부 출범 — 48시간 특별 공조체제</div>
+            <div class="news-time">04/17 · 05:42 · JOINT</div>
+            <div class="news-headline"><span class="tag">공식</span>합일사건 공동대응본부 출범 — 재림(5/5) 전 특별 공조체제</div>
           </div>
           <div class="news-item">
-            <div class="news-time">T-44:33 · Ω</div>
+            <div class="news-time">04/17 · 08:10 · Ω</div>
             <div class="news-headline"><span class="tag alt">Ω</span>오메가 지구, 동일인 조우 신고 급증</div>
           </div>
           <div class="news-item">
-            <div class="news-time">T-42:10 · Ψ</div>
+            <div class="news-time">04/17 · 09:55 · Ψ</div>
             <div class="news-headline"><span class="tag alt">Ψ</span>프사이 지구, 동일 현상 — 의식 전 대비 태세 격상</div>
           </div>
           <div class="news-item">
-            <div class="news-time">T-40:27 · JOINT</div>
+            <div class="news-time">04/17 · 14:33 · JOINT</div>
             <div class="news-headline">자칭 '합일교' 양 지구 모두에서 활동 확인 — 비인가 단체</div>
           </div>
           <div class="news-item">
-            <div class="news-time">T-37:55 · JOINT</div>
+            <div class="news-time">04/17 · 19:04 · JOINT</div>
             <div class="news-headline"><span class="tag">주의</span>"먼저 제거하면 살아남는다" 유언비어 확산 — 양 지구 수사 공조</div>
           </div>
           <div class="news-item">
-            <div class="news-time">T-34:41 · JOINT</div>
-            <div class="news-headline">■■■■■■-■■■■■■■■■■■■■■■■■■■■■?</div>
+            <div class="news-time">04/18 · 02:21 · JOINT</div>
+            <div class="news-headline">거울·유리 관련 품목 품귀 — 양 지구 유통 이상 동향</div>
           </div>
         </div>
       </div>
@@ -993,6 +1117,57 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 </div>
 
 <script>
+/* ============================================================
+   📢 긴급뉴스 티커 — 여기만 수정하면 됩니다
+   ============================================================
+   태그 종류:
+     - 'urgent'  : 흰 배경 + 깜빡임 (최우선)
+     - 'default' : 검은 배경 (기본)
+     - 'omega'   : Ω 지구 단독 (실선 테두리)
+     - 'psi'     : Ψ 지구 단독 (점선 테두리)
+     - 'joint'   : 양 지구 공동
+
+   속도(초): TICKER_DURATION_SECONDS
+     - 숫자 작을수록 빠름. 60 정도가 적당, 90이면 느긋
+   ============================================================ */
+
+const BREAKING_NEWS = [
+  { tag: 'urgent',  label: '긴급',   text: '합일사건 공동대응본부 비상경보 발령 — 양 지구 모든 시민 대처요령 즉시 숙지 요망' },
+  { tag: 'default', label: '속보',   text: '재림(再臨) 시점 공식 확정: 2026년 5월 5일 00:00 KST' },
+  { tag: 'omega',   label: 'Ω',     text: '오메가 지구, 동일인 조우 신고 급증 — 경찰청 24시간 비상체제 돌입' },
+  { tag: 'psi',     label: 'Ψ',     text: '프사이 지구, 의식 전 대비 태세 격상 — 반사면 차단 권고' },
+  { tag: 'urgent',  label: '주의',   text: '"먼저 제거하면 살아남는다" 유언비어 확산 — 관련 행위는 살인죄' },
+  { tag: 'joint',   label: 'JOINT', text: '자칭 "합일교" 양 지구 모두에서 활동 확인 — 비인가 단체, 접촉 금지' },
+  { tag: 'default', label: '공지',   text: '사건파일 2·3·4는 양 지구 공동 분류 등급 이상 권한자에게만 열람 제공' },
+  { tag: 'joint',   label: 'JOINT', text: '거울·유리 관련 품목 품귀 — 양 지구 유통 이상 동향 추적 중' },
+];
+
+const TICKER_DURATION_SECONDS = 90;
+
+/* ============================================================ */
+
+function renderTicker() {
+  const track = document.getElementById('tickerTrack');
+  if (!track) return;
+
+  const buildItems = () => BREAKING_NEWS.map(item => {
+    const tagClass = item.tag === 'urgent' ? 'urgent' :
+                     item.tag === 'omega' ? 'omega' :
+                     item.tag === 'psi' ? 'psi' : '';
+    return `<span class="ticker-item">
+      <span class="t-tag ${tagClass}">${item.label}</span>
+      <span class="t-text">${item.text}</span>
+    </span>`;
+  }).join('');
+
+  // 끊김 없이 무한 반복되려면 같은 내용을 2번 이어붙여야 함
+  track.innerHTML = buildItems() + buildItems();
+  track.style.paddingLeft = '0';
+  track.style.setProperty('--ticker-duration', TICKER_DURATION_SECONDS + 's');
+}
+
+renderTicker();
+
 const HASHES = {
   login:  'f62a98dfab5114dd4a32a7a4b740f61115a5f36966d008fa199f89f145906dfa',
   case2:  'aa5ea4f23f8a63500b01faefac7ded70dd1955f6acd3a8a3d5cbbb5c6f5e0852',
@@ -1060,20 +1235,32 @@ document.getElementById('intro').addEventListener('touchend', e => {
   } else showSlide(currentSlide - 1);
 }, { passive: true });
 
-const TARGET_KEY = 'urb_target_2026';
-let target = parseInt(localStorage.getItem(TARGET_KEY));
-if (!target || isNaN(target) || target < Date.now()) {
-  target = Date.now() + 48 * 60 * 60 * 1000;
-  localStorage.setItem(TARGET_KEY, target.toString());
-}
+// 재림 종료 시각: 2026년 5월 5일 00:00:00 KST (UTC+9)
+// UTC 기준으로는 2026-05-04 15:00:00Z
+const TARGET_TS = Date.UTC(2026, 4, 4, 15, 0, 0); // month는 0-indexed (4 = 5월)
+
 function updateCountdown() {
-  const diff = Math.max(0, target - Date.now());
-  const hh = Math.floor(diff / 3600000);
+  const diff = Math.max(0, TARGET_TS - Date.now());
+  const dd = Math.floor(diff / 86400000);
+  const hh = Math.floor((diff % 86400000) / 3600000);
   const mm = Math.floor((diff % 3600000) / 60000);
   const ss = Math.floor((diff % 60000) / 1000);
+  document.getElementById('t-dd').textContent = String(dd).padStart(2, '0');
   document.getElementById('t-hh').textContent = String(hh).padStart(2, '0');
   document.getElementById('t-mm').textContent = String(mm).padStart(2, '0');
   document.getElementById('t-ss').textContent = String(ss).padStart(2, '0');
+
+  // 인트로 슬라이드의 "남은 시간" 텍스트도 실시간 업데이트
+  const introTimer = document.getElementById('intro-timer');
+  if (introTimer) {
+    introTimer.textContent = `${String(dd).padStart(2,'0')}:${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+  }
+  const introRemainText = document.getElementById('intro-remain-text');
+  if (introRemainText) {
+    if (dd > 0) introRemainText.textContent = `약 ${dd}일 ${hh}시간`;
+    else if (hh > 0) introRemainText.textContent = `약 ${hh}시간 ${mm}분`;
+    else introRemainText.textContent = `${mm}분 ${ss}초`;
+  }
 }
 updateCountdown();
 setInterval(updateCountdown, 1000);

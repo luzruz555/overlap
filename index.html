@@ -1016,6 +1016,30 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
   .file-item:not(.locked):active { border-color: var(--accent); }
   .theme-toggle:active { background: var(--ink); color: var(--bg); }
 }
+
+/* ==================== ARG 숨김 글자 ==================== */
+/* 다크모드: 주변 텍스트에 완전히 녹아듦 */
+.arg-hidden {
+  font-weight: 400;
+  color: inherit;
+  opacity: 0;
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  letter-spacing: normal;
+  user-select: none;
+}
+/* 라이트모드: 볼드로 드러남 */
+[data-theme="light"] .arg-hidden {
+  font-weight: 900;
+  color: #1a1a1a;
+  opacity: 1;
+  width: auto;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+  padding: 0 0.08em;
+}
 </style>
 </head>
 <body data-theme="dark">
@@ -1194,7 +1218,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
         </svg>
         <div class="brand-text">
           <h1>합일사건 공동대응본부</h1>
-          <div class="sub-en">THE UNION — JOINT RESPONSE BUREAU (Ω ∩ Ψ)</div>
+          <div class="sub-en"><span class="arg-hidden">T</span>THE UNION — JOINT RESPONSE BUREAU (Ω ∩ Ψ)</div>
         </div>
       </div>
       <div class="header-meta">
@@ -1229,7 +1253,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
   <main>
     <section class="countdown-hero">
       <div class="countdown-label">T-MINUS · 재림(再臨)까지</div>
-      <div class="countdown-title">The Second Advent — 2026.05.05 00:00 KST</div>
+      <div class="countdown-title">The Second Advent <span class="arg-hidden">R</span>— 2026.05.05 00:00 KST</div>
       <div class="countdown-display">
         <div class="countdown-unit">
           <div class="countdown-num" id="t-dd">00</div>
@@ -1271,7 +1295,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 
       <section class="section" id="overview">
         <div class="section-head">
-          <h2>사건정리 · OVERVIEW</h2>
+          <h2>사건정리 · <span class="arg-hidden">A</span>OVERVIEW</h2>
           <span class="code">JRB / OVR-01</span>
         </div>
         <div class="overview">
@@ -1284,17 +1308,17 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 
       <section class="section" id="cases">
         <div class="section-head">
-          <h2>사건파일 · CASE FILES</h2>
+          <h2>사건파일 · <span class="arg-hidden">C</span>CASE FILES</h2>
           <span class="code">JRB / CSF-04</span>
         </div>
         <div class="file-list">
-          <a class="file-item" data-case="1">
+          <a class="file-item locked" data-case="1">
             <div class="file-num">#01</div>
             <div class="file-info">
-              <div class="file-title">첫 조우의 기록</div>
-              <div class="file-desc">양 지구 공통 보고 · 시뮬레이션</div>
+              <div class="file-title">[검열됨]</div>
+              <div class="file-desc">—</div>
             </div>
-            <div class="file-status open">▷ 열람</div>
+            <div class="file-status locked">🔒 제한</div>
           </a>
           <a class="file-item locked" data-case="2">
             <div class="file-num">#02</div>
@@ -1325,7 +1349,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 
       <section class="section" id="glossary">
         <div class="section-head">
-          <h2>용어정리 · GLOSSARY</h2>
+          <h2>용어정리 · <span class="arg-hidden">E</span>GLOSSARY</h2>
           <span class="code">JRB / GLS-07</span>
         </div>
         <div class="glossary">
@@ -1364,7 +1388,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 
       <section class="section" id="guidelines">
         <div class="section-head">
-          <h2>시민 대처요령 · CITIZEN GUIDELINES</h2>
+          <h2>시민 대처요령 · <span class="arg-hidden">0</span>CITIZEN GUIDELINES</h2>
           <span class="code">JRB / CTZ-03</span>
         </div>
         <div class="guidelines">
@@ -1465,7 +1489,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
     <div class="gov-seal">合 · JOINT RESPONSE BUREAU</div>
     <div>© 합일사건 공동대응본부 · Ω ∩ Ψ 공동 명의 임시문서</div>
     <div>본 문서는 양 지구의 중립적 입장에서 작성되었으며, 어느 측도 우선 지위를 주장하지 않습니다.</div>
-    <div style="margin-top: 0.8rem; opacity: 0.4;">JRB-C-0417-001 · DECLASSIFIED FOR PUBLIC VIEWING</div>
+    <div style="margin-top: 0.8rem; opacity: 0.4;"><span class="arg-hidden">0</span>JRB-C-0417-001 · DECLASSIFIED FOR PUBLIC VIEWING</div>
   </footer>
 </div>
 
@@ -1508,6 +1532,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 
       <div class="tr-warning">
         ※ 본 전사본에는 폭력 장면에 대한 언어적 묘사가 포함되어 있습니다.<br>
+        ※ 재림 이후 확보된 물리적 증거와 일치합니다.
       </div>
     </div>
 
@@ -1589,6 +1614,7 @@ renderTicker();
 
 const HASHES = {
   login:  'f62a98dfab5114dd4a32a7a4b740f61115a5f36966d008fa199f89f145906dfa',
+  case1:  'e996cfb2190fb34b4e45b40cd137d228547767c6a68f26ba599924ef84f582a2',
   case2:  'aa5ea4f23f8a63500b01faefac7ded70dd1955f6acd3a8a3d5cbbb5c6f5e0852',
   case3:  '63dbf491ccca66bcc39e8baf04fb622f659f94dfe8e2286a839ae5582422c8c3',
   case4:  'dd33b3a91f7f4e8a90418cbf9f56356cb3e4a2db8b768d123c59ec8910c2327a',
@@ -1741,15 +1767,12 @@ document.querySelectorAll('.file-item').forEach(item => {
   item.addEventListener('click', e => {
     e.preventDefault();
     const caseNum = parseInt(item.dataset.case);
-    if (caseNum === 1) openGameScreen();
-    else {
-      activeCaseNum = caseNum;
-      modalTitle.textContent = `사건파일 #0${caseNum} · 접근 제한`;
-      modalDesc.textContent = '본 문서는 양 지구 공동 분류 등급 이상 권한이 필요합니다. 접근 키를 입력하십시오.';
-      modalInput.value = ''; modalMsg.textContent = ''; modalMsg.className = 'modal-msg';
-      modalOverlay.classList.add('active');
-      setTimeout(() => modalInput.focus(), 100);
-    }
+    activeCaseNum = caseNum;
+    modalTitle.textContent = `사건파일 #0${caseNum} · 접근 제한`;
+    modalDesc.textContent = '본 문서는 양 지구 공동 분류 등급 이상 권한이 필요합니다. 접근 키를 입력하십시오.';
+    modalInput.value = ''; modalMsg.textContent = ''; modalMsg.className = 'modal-msg';
+    modalOverlay.classList.add('active');
+    setTimeout(() => modalInput.focus(), 100);
   });
 });
 
@@ -1758,8 +1781,18 @@ async function submitModal() {
   if (!val) { modalMsg.textContent = '키를 입력하십시오.'; modalMsg.className = 'modal-msg error'; return; }
   const h = await sha256(val);
   if (h === HASHES['case' + activeCaseNum]) {
-    modalMsg.textContent = '✓ 인증 완료 — 해당 문서는 추후 업데이트로 공개됩니다.';
-    modalMsg.className = 'modal-msg ok';
+    if (activeCaseNum === 1) {
+      // 사건파일 #01: 인증 성공 시 전사본 열기
+      modalMsg.textContent = '✓ 인증 완료 — 문서를 불러옵니다…';
+      modalMsg.className = 'modal-msg ok';
+      setTimeout(() => {
+        modalOverlay.classList.remove('active');
+        openGameScreen();
+      }, 600);
+    } else {
+      modalMsg.textContent = '✓ 인증 완료 — 해당 문서는 추후 업데이트로 공개됩니다.';
+      modalMsg.className = 'modal-msg ok';
+    }
   } else {
     modalMsg.textContent = '✗ 인증 실패 — 기록이 남습니다.';
     modalMsg.className = 'modal-msg error';
@@ -2011,10 +2044,8 @@ const TRANSCRIPT = [
 
 const TR_STATE_KEY = 'tr_case01_state_v2';
 let trIndex = 0;
-let trFullReveal = false;
 
 function openGameScreen() {
-  const saved = loadTrState();
   document.getElementById('game-screen').classList.add('active');
   window.scrollTo(0, 0);
 
@@ -2025,28 +2056,7 @@ function openGameScreen() {
   ending.classList.remove('show');
   advance.classList.remove('show');
   trIndex = 0;
-
-  if (saved && saved.completed) {
-    // 재진입: 전체 즉시 펼침
-    trFullReveal = true;
-    renderAll();
-  } else {
-    trFullReveal = false;
-    advanceTranscript();
-  }
-}
-
-function saveTrState() {
-  try {
-    localStorage.setItem(TR_STATE_KEY, JSON.stringify({ completed: true }));
-  } catch(e) {}
-}
-
-function loadTrState() {
-  try {
-    const raw = localStorage.getItem(TR_STATE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch(e) { return null; }
+  advanceTranscript();
 }
 
 function renderLine(line, animate = true) {
@@ -2149,47 +2159,37 @@ function showEnding() {
     </div>
     <div class="finding-row">
       <span class="finding-key">박연우(Ω)</span>
-      <span class="finding-val deceased">사망 확인 · 재림(再臨) 시각 이전</span>
+      <span class="finding-val deceased">사망 · 현장 사인 조사 중</span>
     </div>
     <div class="finding-row">
       <span class="finding-key">박연우(Ψ)</span>
-      <span class="finding-val survived">생존 확인 · 재림(再臨) 이후 유일 개체</span>
+      <span class="finding-val survived">생존 · 신병 확보 후 참고인 조사 진행</span>
     </div>
     <div class="finding-row">
       <span class="finding-key"><span class="tr-redact">■■■</span>(A양)</span>
-      <span class="finding-val">생존 · 참고인 조사 1회 후 추가 진술 거부</span>
+      <span class="finding-val">생존 · 1차 참고인 조사 1회 후 추가 진술 거부</span>
     </div>
     <div class="finding-row">
-      <span class="finding-key">형사처분</span>
-      <span class="finding-val">박연우(Ψ) — 정당방위 인정, 불기소</span>
+      <span class="finding-key">수사상황</span>
+      <span class="finding-val">박연우(Ψ) — 정당방위 주장 / 현장 물증 및 본 전사본을 근거로 현재 불기소 방향 검토 중</span>
     </div>
     <div class="finding-row">
-      <span class="finding-key">후속조치</span>
-      <span class="finding-val">재림 이후 박연우(Ψ)의 신분 등록은 박연우(Ω)의 기존 신분에 통합됨. 단, 성별 및 직업 정보는 본인 진술에 따라 수정됨.</span>
+      <span class="finding-key">재림 전 유의</span>
+      <span class="finding-val">재림(再臨) 시각은 <strong>2026년 5월 5일 00:00 KST</strong>이며, 박연우(Ω)의 사망에도 불구하고 박연우(Ψ)는 본 시점 이후 소실 가능성이 존재한다. 본 사건의 최종 처분은 재림 이후 본부 재심의로 확정될 예정.</span>
     </div>
 
     <div class="closing-note">
-      ※ <span class="tr-redact">■■■</span>(A양)과 박연우(Ψ)는 현재 동일 주소지에 거주 중인 것으로 확인된다.<br>
-      ※ 본 관계의 성격에 관하여는 양측 모두 어떠한 진술도 거부하고 있으며, 본부는 이에 대한 판단을 보류한다.<br>
+      ※ <span class="tr-redact">■■■</span>(A양)과 박연우(Ψ)는 <strong>1차 조사 이후 동일 주소지에 함께 체류 중</strong>인 것으로 확인된다.<br>
+      ※ 본 관계의 성격에 관해서는 양측 모두 어떠한 진술도 거부하고 있으며, 본부는 이에 대한 판단을 보류한다.<br>
       ※ 이웃 및 지인 진술에 따르면, 두 사람은 "자매" 또는 "친구"로 소개되고 있으나, 공식 기록상 혈연 관계는 없다.
     </div>
 
     <div class="stamp-line">
-      — 합일사건 공동대응본부 · JRB-C-0417-001 / CSF-01 · 열람등급 제한 —
+      — 합일사건 공동대응본부 · JRB-C-0417-001 / CSF-01 · 재림 전 임시 보고 · 열람등급 제한 —
     </div>
   `;
   ending.classList.add('show');
-  saveTrState();
   scrollToBottom();
-}
-
-function renderAll() {
-  const body = document.getElementById('trBody');
-  TRANSCRIPT.forEach(line => {
-    if (line.type === 'pause') return;
-    renderLine(line, false);
-  });
-  showEnding();
 }
 
 // ========== 이벤트 ==========

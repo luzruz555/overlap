@@ -1017,6 +1017,80 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
   .theme-toggle:active { background: var(--ink); color: var(--bg); }
 }
 
+/* ==================== 서버 습격 글리치 연출 ==================== */
+.glitch-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: #000; display: none;
+  justify-content: center; align-items: center;
+  flex-direction: column;
+}
+.glitch-overlay.active { display: flex; }
+
+.glitch-warning {
+  color: #ff3333; font-family: var(--font-mono);
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  letter-spacing: 0.2em; text-align: center;
+  margin-bottom: 2rem;
+  animation: warning-blink 0.5s infinite;
+}
+@keyframes warning-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+.glitch-lines {
+  width: 80%; max-width: 600px;
+  font-family: var(--font-mono); color: #33ff33;
+  font-size: 0.9rem; line-height: 1.6;
+}
+.glitch-line {
+  margin-bottom: 0.3rem; opacity: 0;
+  animation: glitch-appear 0.1s forwards;
+}
+.glitch-line:nth-child(1) { animation-delay: 0.2s; }
+.glitch-line:nth-child(2) { animation-delay: 0.5s; }
+.glitch-line:nth-child(3) { animation-delay: 0.8s; }
+.glitch-line:nth-child(4) { animation-delay: 1.2s; }
+.glitch-line:nth-child(5) { animation-delay: 1.6s; }
+
+@keyframes glitch-appear {
+  0% { opacity: 0; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.cmd-window {
+  background: #000; border: 2px solid #333;
+  width: 90%; max-width: 500px; margin-top: 2rem;
+  font-family: 'Courier New', monospace;
+  padding: 0; display: none;
+}
+.cmd-window.show { display: block; animation: cmd-boot 0.5s ease; }
+@keyframes cmd-boot {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.cmd-header {
+  background: #333; color: #fff; padding: 0.3rem 0.8rem;
+  font-size: 0.7rem; border-bottom: 1px solid #555;
+}
+.cmd-body {
+  padding: 1rem; color: #fff; min-height: 120px;
+  font-size: 0.8rem; line-height: 1.5;
+}
+
+.cmd-prompt { color: #33ff33; }
+.creature-message {
+  color: #ff6666; font-size: 1.1rem;
+  letter-spacing: 0.15em; margin-top: 0.8rem;
+  animation: creature-glitch 0.8s infinite;
+}
+@keyframes creature-glitch {
+  0%, 90% { text-shadow: 0 0 5px #ff6666; }
+  95% { text-shadow: 2px 0 #ff6666, -2px 0 #66ff66; transform: skewX(2deg); }
+  100% { text-shadow: 0 0 5px #ff6666; transform: skewX(0); }
+}
+
 /* ==================== ARG 숨김 글자 ==================== */
 /* 다크모드: 주변 텍스트에 완전히 녹아듦 */
 .arg-hidden {
@@ -1493,6 +1567,31 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
   </footer>
 </div>
 
+<!-- ============================================================
+     ⚡ 서버 습격 글리치 연출
+     ============================================================ -->
+<div class="glitch-overlay" id="glitchOverlay">
+  <div class="glitch-warning">⚠ SECURITY BREACH DETECTED ⚠</div>
+  
+  <div class="glitch-lines">
+    <div class="glitch-line">> 시스템 침입 감지...</div>
+    <div class="glitch-line">> 방화벽 우회됨</div>
+    <div class="glitch-line">> 데이터베이스 접근 시도 중</div>
+    <div class="glitch-line">> 경고: 알 수 없는 개체 연결</div>
+    <div class="glitch-line">>> 연결 강제 차단 중...</div>
+  </div>
+
+  <div class="cmd-window" id="cmdWindow">
+    <div class="cmd-header">● Command Prompt - [침입자]</div>
+    <div class="cmd-body">
+      <div class="cmd-prompt">C:\SYSTEM\SECURE> </div>
+      <div>접속 감지됨...</div>
+      <div>이곳은... 안전한가요?</div>
+      <div class="creature-message">WHATISLOVE..?</div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="lockModal">
   <div class="modal">
     <h3 id="modalTitle">접근 제한 · RESTRICTED</h3>
@@ -1532,6 +1631,7 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
 
       <div class="tr-warning">
         ※ 본 전사본에는 폭력 장면에 대한 언어적 묘사가 포함되어 있습니다.<br>
+        ※ 재림 이후 확보된 물리적 증거와 일치합니다.
       </div>
     </div>
 
@@ -1575,14 +1675,16 @@ footer .gov-seal { font-family: var(--font-display); font-size: 0.85rem; color: 
    ============================================================ */
 
 const BREAKING_NEWS = [
-  { tag: 'urgent',  label: '긴급',   text: '합일사건 공동대응본부 비상경보 발령 — 양 지구 모든 시민 대처요령 즉시 숙지 요망' },
-  { tag: 'default', label: '속보',   text: '재림(再臨) 시점 공식 확정: 2026년 5월 5일 00:00 KST' },
+  { tag: 'urgent',  label: '긴급',   text: '합일사건 공동대응본부 서버실 정체불명 침입 — 보안망 일부 손상, 복구 작업 진행 중' },
+  { tag: 'urgent',  label: '경보',   text: '본부 내부망 미상의 외부 신호 감지 — "WHATISLOVE" 문자열 반복 송출 확인' },
+  { tag: 'default', label: '속보',   text: '서버 침입 사건 — 침입 경로 미상, 물리적 침입 흔적은 발견되지 않음' },
+  { tag: 'urgent',  label: '주의',   text: '본부 직원 다수 정체불명 환청 호소 — 침입 사건과의 연관성 조사 중' },
   { tag: 'omega',   label: 'Ω',     text: '오메가 지구, 동일인 조우 신고 급증 — 경찰청 24시간 비상체제 돌입' },
-  { tag: 'psi',     label: 'Ψ',     text: '프사이 지구, 의식 전 대비 태세 격상 — 외출 자제 권고' },
+  { tag: 'psi',     label: 'Ψ',     text: '프사이 지구, 재림 전 대비 태세 격상 — 외출 자제 권고' },
+  { tag: 'default', label: '속보',   text: '재림(再臨) 시점 공식 확정: 2026년 5월 5일 00:00 KST' },
+  { tag: 'joint',   label: 'JOINT', text: '서버실 침입 사건 관련 — 양 지구 사이버보안팀 합동 대응 중' },
   { tag: 'urgent',  label: '주의',   text: '"먼저 제거하면 살아남는다" 유언비어 확산 — 관련 행위는 살인죄' },
-  { tag: 'joint',   label: 'JOINT', text: '자칭 "합일교" 양 지구 모두에서 활동 확인 — 비인가 단체, 접촉 금지' },
   { tag: 'default', label: '공지',   text: '사건파일 2·3·4는 양 지구 공동 분류 등급 이상 권한자에게만 열람 제공' },
-  { tag: 'joint',   label: 'JOINT', text: '식료품·현금 사재기 현상 발생 — 양 지구 유통 이상 동향 추적 중' },
 ];
 
 const TICKER_DURATION_SECONDS = 90;
@@ -1614,9 +1716,9 @@ renderTicker();
 const HASHES = {
   login:  'f62a98dfab5114dd4a32a7a4b740f61115a5f36966d008fa199f89f145906dfa',
   case1:  'e996cfb2190fb34b4e45b40cd137d228547767c6a68f26ba599924ef84f582a2',
-  case2:  'aa5ea4f23f8a63500b01faefac7ded70dd1955f6acd3a8a3d5cbbb5c6f5e0852',
-  case3:  '63dbf491ccca66bcc39e8baf04fb622f659f94dfe8e2286a839ae5582422c8c3',
-  case4:  'dd33b3a91f7f4e8a90418cbf9f56356cb3e4a2db8b768d123c59ec8910c2327a',
+  case2:  '2840423f85b05bf3ff50bb307de9a170aeb50c6808945926f7e45bdc915f94bc',
+  case3:  '8d37a96538de693f001a3c92bfeb6a99f025bcee742061d690a21d072a8b2b5c',
+  case4:  '219371dd0b1551e4c6987a8e499fa9a6b9d2ddd632888c84421140b8428f410d',
 };
 
 async function sha256(text) {
@@ -1653,6 +1755,11 @@ function endIntro() {
   setTimeout(() => {
     intro.style.display = 'none';
     document.getElementById('main-site').classList.add('revealed');
+    
+    // 5초 후 글리치 연출 시작
+    setTimeout(() => {
+      startGlitchAttack();
+    }, 5000);
   }, 600);
 }
 
@@ -1786,7 +1893,15 @@ async function submitModal() {
       modalMsg.className = 'modal-msg ok';
       setTimeout(() => {
         modalOverlay.classList.remove('active');
-        openGameScreen();
+        openGameScreen(activeCaseNum);
+      }, 600);
+    } else if (activeCaseNum >= 2 && activeCaseNum <= 4) {
+      // 사건파일 #02,03,04: 인증 성공 시 전사본 열기
+      modalMsg.textContent = '✓ 인증 완료 — 문서를 불러옵니다…';
+      modalMsg.className = 'modal-msg ok';
+      setTimeout(() => {
+        modalOverlay.classList.remove('active');
+        openGameScreen(activeCaseNum);
       }, 600);
     } else {
       modalMsg.textContent = '✓ 인증 완료 — 해당 문서는 추후 업데이트로 공개됩니다.';
@@ -1815,13 +1930,62 @@ const SPK = {
   omega: '박연우(Ω)',
   psi:   '박연우(Ψ)',
   ayang: '<span class="tr-redact">■■■</span>(A양)',
+  interrogator: '[조사관]',
+  subject:      '[피조사자]',
+  supervisor:   '[감독관]',
+  researcher:   '[연구원]',
+  observer:     '[관찰자]',
+  creature:     '<span class="tr-redact">████</span>',
   meta:  '[전사 메모]',
+};
+
+// 케이스별 문서 메타데이터
+const CASE_META = {
+  1: {
+    title: '녹취 전사본',
+    subtitle: 'TRANSCRIPT OF RECORDED CONVERSATION',
+    code: 'JRB-C-0417-001 / CSF-01',
+    original: 'REC_<span class="tr-redact">██████</span>.wav · 47분 12초',
+    source: '녹음본부 제출 · 음성 파일 자동 전사',
+    persons: '박연우(Ω-2026) · 박연우(Ψ-13.0.1.5.12) · <span class="tr-redact">■■■</span>(A양)',
+    note: '일부 구간 <span class="tr-redact">█████</span> · 관찰 메모는 전사자가 삽입',
+    warning: '※ 본 전사본에는 폭력 장면에 대한 언어적 묘사가 포함되어 있습니다.<br>※ 재림 이후 확보된 물리적 증거와 일치합니다.',
+  },
+  2: {
+    title: '추가 심문 전사본',
+    subtitle: 'SUPPLEMENTARY INTERROGATION TRANSCRIPT',
+    code: 'JRB-C-0417-002 / CSF-02',
+    original: 'REC_<span class="tr-redact">██████</span>_S2.wav · 1시간 08분',
+    source: '본부 심문실 B · 음성 파일 자동 전사',
+    persons: '<span class="tr-redact">■■■</span>(A양) · 본부 소속 조사관 2인',
+    note: '※ 본 심문은 당초 1차 조사에서 A양의 진술 거부 이후 강제 소환으로 진행됨<br>※ <strong>종결부 전사 불가 — 현장 사고 발생</strong>',
+    warning: '※ 본 문서는 <span class="tr-redact">████████</span> 이후 수정 재발행된 버전입니다.<br>※ 원본은 감찰 자료로 봉인되었습니다.',
+  },
+  3: {
+    title: '현장 보고 전사본',
+    subtitle: 'FIELD REPORT TRANSCRIPT',
+    code: 'JRB-C-0417-003 / CSF-03',
+    original: 'REC_<span class="tr-redact">██████</span>_F3.wav · 52분 30초',
+    source: '제보자 자택 · 바디캠 음성 분리 전사',
+    persons: '<span class="tr-redact">■■■</span>(S양, 26세) · 현장 출동 요원 3인',
+    note: '※ 대상자는 SNS 인플루언서로, 제보는 가족으로부터 접수됨<br>※ <strong>종결부 전사 불가 — 요원 2인 중상, 대상자 포획 실패</strong>',
+    warning: '※ 대상자는 현재 <strong>특수개체 STORY01</strong>로 분류되어 추적 중입니다.<br>※ 본 문서의 일부 정보는 <strong>암호 처리</strong>되어 있습니다.',
+  },
+  4: {
+    title: '실험 기록 전사본',
+    subtitle: 'EXPERIMENT LOG TRANSCRIPT',
+    code: 'JRB-C-0417-004 / CSF-04',
+    original: 'LAB_<span class="tr-redact">██████</span>_E4.wav · 총 4회 / 합계 3시간 47분',
+    source: '본부 격리시설 B-7 · 실험 녹취 취합',
+    persons: '<strong>특수개체 HYPOCRISY02</strong> · 연구원 4인 · 감독관 1인',
+    note: '※ 피험자는 자원 2인, 본부 소속 연구원 2인으로 구성됨<br>※ <strong>4차 실험 도중 피험자 1인 정신 붕괴 — 실험 전면 중단</strong>',
+    warning: '※ HYPOCRISY02는 현재 B-7 구역에 격리 수감 중이며, 무기한 접근 금지 상태입니다.',
+  },
 };
 
 // 전사 라인 정의
 // type: 'line'(발화) / 'memo'(관찰) / 'break'(구간 구분) / 'glitch'(끊김) / 'pause'(진행 버튼)
-// spk: 'omega'|'psi'|'ayang' / text: 내용
-const TRANSCRIPT = [
+const TRANSCRIPT_CASE1 = [
   { type: 'start', text: '— 녹음 시작 —' },
 
   // ===== 1부: 밤, 침입 =====
@@ -1989,7 +2153,7 @@ const TRANSCRIPT = [
   { type: 'pause' },
 
   { type: 'line', spk: 'psi',   text: '…저는 반격하지 않을 거예요.' },
-  { type: 'line', spk: 'psi',   text: '그쪽이 그렇게 하고 싶으시면, 하세요. 저는 어차피 재림 때 사라질 수도 있고요.' },
+  { type: 'line', spk: 'psi',   text: '그쪽이 그렇게 하고 싶으시면, 하세요. 저는 어차피 오늘 밤 재림 때 사라질 수도 있고요.' },
   { type: 'line', spk: 'ayang', text: '그런 말 하지 마.' },
   { type: 'line', spk: 'ayang', text: '둘 다. 그런 말 하지 마.' },
   { type: 'line', spk: 'omega', text: '…' },
@@ -2036,6 +2200,341 @@ const TRANSCRIPT = [
   { type: 'end', text: '— 녹음 종료 —' },
 ];
 
+// ========== CASE #02 — A양 재심문 → TRACE00 출현 ==========
+// ARG: STORY01을 S-T-O-R-Y-0-1 순서로 볼드체에 자연스럽게 숨김
+const TRANSCRIPT_CASE2 = [
+  { type: 'start', text: '— 녹음 시작 —' },
+
+  { type: 'line', spk: 'meta', text: '일시: 2026년 4월 21일 오전 10시 14분' },
+  { type: 'line', spk: 'meta', text: '장소: 합일사건 공동대응본부 제3심문실' },
+  { type: 'line', spk: 'meta', text: '심문 사유: 1차 조사 진술 거부에 따른 재소환' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'interrogator', text: '재소환 조사를 시작하겠습니다. 성함과 생년월일 부탁드립니다.' },
+  { type: 'memo', text: '(약 5초 침묵.)' },
+  { type: 'line', spk: 'ayang', text: '…1차 때 다 말씀드렸잖아요.' },
+  { type: 'line', spk: 'interrogator', text: '절차상 필요합니다. 다시 한번만요.' },
+  { type: 'line', spk: 'ayang', text: '<span class="tr-redact">■■■</span>. <span class="tr-redact">███████</span>.' },
+  { type: 'line', spk: 'interrogator', text: '협조 감사합니다. 너무 긴장하지 않으셔도 됩니다.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'interrogator', text: '먼저, 박연우(Ψ) 씨와 현재 같은 주소에 거주하고 계신 게 맞습니까.' },
+  { type: 'line', spk: 'ayang', text: '…네.' },
+  { type: 'line', spk: 'interrogator', text: '두 분의 관계를 어떻게 설명하시겠어요.' },
+  { type: 'line', spk: 'ayang', text: '…꼭 말해야 하나요.' },
+  { type: 'line', spk: 'interrogator', text: '진술 거부는 가능합니다. 다만 기록에 남습니다.' },
+  { type: 'memo', text: '(약 8초 침묵.)' },
+  { type: 'line', spk: 'ayang', text: '…친구예요. 그냥, 친구.' },
+  { type: 'line', spk: 'interrogator', text: '알겠습니다.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'interrogator', text: '본론으로 들어가겠습니다. 프사이 지구의 본인, 그러니까 평행자아를 만난 적이 있으십니까.' },
+  { type: 'memo', text: '(약 4초 침묵.)' },
+  { type: 'line', spk: 'ayang', text: '…아뇨. 없어요.' },
+  { type: 'line', spk: 'interrogator', text: '확실하시죠?' },
+  { type: 'line', spk: 'ayang', text: '네. 본 적 없어요.' },
+  { type: 'line', spk: 'interrogator', text: '그런데 박연우(Ψ) 씨의 진술에 따르면 — 프사이 지구에 <span class="tr-redact">■■■</span>씨에 해당하는 인물은 <strong>S</strong>존재하지 않는다고 합니다.' },
+  { type: 'memo', text: '(약 9초 침묵.)' },
+  { type: 'line', spk: 'ayang', text: '…그게 저랑 무슨 상관이에요.' },
+  { type: 'line', spk: 'interrogator', text: '상관이 있습니다. 합일 현상은 양 지구에 동일 식별자를 가진 개체가 존재할 때만 발생해요.' },
+  { type: 'line', spk: 'interrogator', text: '프사이 지구에 <span class="tr-redact">■■■</span>씨가 없다는 건 — 당신이 원래 합일 대상이 아니었을 수도 있다는 뜻입니다.' },
+  { type: 'line', spk: 'ayang', text: '말도 안 돼요. 저는 여기서 28년 살았어요.' },
+  { type: 'line', spk: 'interrogator', text: '기록상으로는 그렇습니다.' },
+  { type: 'line', spk: 'ayang', text: '…기록상으로만요?' },
+  { type: 'line', spk: 'interrogator', text: '그건 제가 답해드릴 부분이 아닙니다.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'interrogator', text: '질문을 바꾸겠습니다. 박연우(Ω) 씨가 사망하기 직전, 정확히 무엇을 보셨습니까.' },
+  { type: 'line', spk: 'ayang', text: '…이미 진술했어요. 그 사람이 칼을 들었고, 프사이 쪽이 막으려다가—' },
+  { type: 'line', spk: 'interrogator', text: '그 부분은 압니다. 저는 그 직전을 묻고 있어요.' },
+  { type: 'line', spk: 'ayang', text: '…직전이요?' },
+  { type: 'line', spk: 'interrogator', text: '현장 CCTV를 분석한 결과, 박연우(Ω) 씨가 칼을 꺼내기 약 3초 전에 — 당신의 <strong>T</strong>표정이 잠시 변했습니다.' },
+  { type: 'line', spk: 'interrogator', text: '그 3초 동안 무슨 생각을 하셨어요.' },
+  { type: 'line', spk: 'ayang', text: '…' },
+  { type: 'line', spk: 'ayang', text: '…죽었으면 좋겠다고 생각했어요.' },
+  { type: 'memo', text: '(조사관의 펜이 멈추는 소리.)' },
+  { type: 'line', spk: 'ayang', text: '…근데 그게 — 제가 한 생각인지, 들은 건지 모르겠어요.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'interrogator', text: '들었다는 건 무슨 뜻이죠.' },
+  { type: 'line', spk: 'ayang', text: '몰라요. 말하기 싫어요.' },
+  { type: 'line', spk: 'interrogator', text: '<span class="tr-redact">■■■</span>씨, 저는 당신을 도우려고 묻는 겁니다.' },
+  { type: 'line', spk: 'ayang', text: '…<strong>O</strong>의심하면서 도와요?' },
+  { type: 'line', spk: 'interrogator', text: '의심이 아니라 확인이에요.' },
+  { type: 'line', spk: 'ayang', text: '같은 말이잖아요.' },
+  { type: 'line', spk: 'interrogator', text: '지난 사흘간 주변에서 두통, 환청, 기억 왜곡 같은 일을 겪은 사람이 있나요.' },
+  { type: 'line', spk: 'ayang', text: '…없어요.' },
+  { type: 'line', spk: 'interrogator', text: '본인은요.' },
+  { type: 'line', spk: 'ayang', text: '왜 그걸 저한테 물어요.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'interrogator', text: '잠시 호흡 좀 하세요. 5분 쉬었다 갈까요.' },
+  { type: 'line', spk: 'ayang', text: '괜찮아요. 빨리 끝내고 집에 가고 싶어요.' },
+  { type: 'line', spk: 'interrogator', text: '…알겠습니다. 마지막 질문 하나만 드리겠습니다.' },
+  { type: 'line', spk: 'interrogator', text: '박연우(Ψ) 씨를 사랑하십니까.' },
+  { type: 'memo', text: '(약 12초 침묵.)' },
+  { type: 'line', spk: 'ayang', text: '…그 질문은 하지 마세요.' },
+  { type: 'line', spk: 'interrogator', text: '곤란하시면 패스하셔도 됩니다.' },
+  { type: 'line', spk: 'ayang', text: '저는 그 질문이 뭘 위한 건지 알아요.' },
+  { type: 'line', spk: 'ayang', text: '<strong>R</strong>제 답을 가지고 저를 어떻게 분류할지 정하실 거잖아요.' },
+  { type: 'line', spk: 'interrogator', text: '…분류는 이미 시작됐습니다.' },
+
+  { type: 'pause' },
+
+  { type: 'memo', text: '(조사실 형광등 깜빡임. 이후 잠시 정전.)' },
+  { type: 'line', spk: 'interrogator', text: '<span class="tr-redact">■■■</span>씨?' },
+  { type: 'line', spk: 'ayang', text: '…' },
+  { type: 'line', spk: 'interrogator', text: '제 말 들리세요?' },
+  { type: 'memo', text: '(약 5초 침묵.)' },
+  { type: 'line', spk: 'ayang', text: '…<strong>Y</strong>심장 소리가 들려요.' },
+  { type: 'line', spk: 'interrogator', text: '…네?' },
+  { type: 'line', spk: 'ayang', text: '제 거 아닌 거요. 누가 옆에서 — 같이 뛰는 것 같은.' },
+  { type: 'line', spk: 'interrogator', text: '<span class="tr-redact">■■■</span>씨, 감독관 부르겠습니다.' },
+  { type: 'line', spk: 'ayang', text: '부르지 마세요.' },
+  { type: 'line', spk: 'interrogator', text: '지금 즉시—' },
+  { type: 'line', spk: 'ayang', text: '<strong>0</strong>지금 부르면 그 사람도 들어요.' },
+
+  { type: 'pause' },
+
+  { type: 'memo', text: '(조사실 문 열리는 소리.)' },
+  { type: 'line', spk: 'supervisor', text: '무슨 일입니까.' },
+  { type: 'line', spk: 'interrogator', text: '감독관님, <span class="tr-redact">■■■</span>씨 상태가—' },
+  { type: 'line', spk: 'ayang', text: '<strong>1</strong>늦으셨어요.' },
+  { type: 'line', spk: 'supervisor', text: '…뭐라고요.' },
+  { type: 'line', spk: 'ayang', text: '저를 의심해서 부른 거, 후회하실 거예요.' },
+  { type: 'line', spk: 'supervisor', text: '조사관, 녹음 중단하세요.' },
+  { type: 'line', spk: 'interrogator', text: '이미 녹음 중입니다.' },
+  { type: 'line', spk: 'ayang', text: '막는 게 늦었어요.' },
+
+  { type: 'pause' },
+
+  { type: 'memo', text: '(약 3초 정적.)' },
+  { type: 'memo', text: '(조사관의 짧은 비명. 단어 식별 불가.)' },
+  { type: 'memo', text: '(감독관의 외침. "이쪽 보지 마 — 이쪽 보지 마—")' },
+  { type: 'glitch', text: '▓▓▓▓▓ 전사 불가 구간 · 약 00:47 ▓▓▓▓▓' },
+  { type: 'memo', text: '(금속이 휘는 소리. 인간 음역을 벗어난 저주파 감지.)' },
+  { type: 'glitch', text: '▓▓▓▓▓ 전사 불가 구간 · 약 01:12 ▓▓▓▓▓' },
+  { type: 'memo', text: '(긴 정적. 약 2분 14초.)' },
+  { type: 'memo', text: '(단일 인물의 숨소리. 화자 미식별.)' },
+  { type: 'line', spk: 'creature', text: '…가지 마요.' },
+  { type: 'memo', text: '(녹음기 전원 종료.)' },
+
+  { type: 'end', text: '— 녹음 강제 종료 —' },
+];
+
+// ========== CASE #03 — 거짓말쟁이 여자 → STORY01 출현 ==========
+// ARG: HYPOCRISY02의 시저 시프트(+7) → OFWVJYPZF02
+const TRANSCRIPT_CASE3 = [
+  { type: 'start', text: '— 바디캠 녹음 시작 —' },
+
+  { type: 'line', spk: 'meta', text: '일시: 2026년 4월 20일 오후 3시 17분' },
+  { type: 'line', spk: 'meta', text: '출동 사유: "딸이 이상해졌다"는 모친의 112 신고 (가정폭력 의심)' },
+  { type: 'line', spk: 'meta', text: '현장: <span class="tr-redact">███</span>시 <span class="tr-redact">███</span>구 <span class="tr-redact">██</span>동 오피스텔 14층' },
+
+  { type: 'pause' },
+
+  { type: 'memo', text: '(엘리베이터 문 열리는 소리. 요원 3인 발걸음.)' },
+  { type: 'line', spk: 'observer', text: '1402호죠?' },
+  { type: 'line', spk: 'interrogator', text: '맞습니다. 문 열려 있어요. 진입하겠습니다.' },
+  { type: 'memo', text: '(문 안쪽에서 들리는 울음소리. 여성 1인.)' },
+  { type: 'line', spk: 'interrogator', text: '계세요? 신고 받고 왔습니다. <span class="tr-redact">■■■</span>씨 계십니까.' },
+  { type: 'memo', text: '(약 4초 침묵.)' },
+  { type: 'line', spk: 'subject', text: '…누구세요.' },
+  { type: 'line', spk: 'interrogator', text: '합일사건 공동대응본부 현장팀입니다. 잠깐 들어가도 될까요.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'subject', text: '…들어오세요. 엄마가 부르신 거죠.' },
+  { type: 'line', spk: 'interrogator', text: '네. 무슨 일 있으셨어요?' },
+  { type: 'line', spk: 'subject', text: '아니요. 아무 일도 없었어요.' },
+  { type: 'memo', text: '(거실. 책상 위에 깨진 거울 조각, 찢어진 사진들 흩어짐. 영상 확인.)' },
+  { type: 'line', spk: 'observer', text: '…저, 저 사진들은—' },
+  { type: 'line', spk: 'subject', text: '그냥 정리하던 중이었어요.' },
+  { type: 'line', spk: 'interrogator', text: '어머님이 신고하신 내용은 — 어제부터 따님이 계속 혼잣말을 한다는 거였는데요.' },
+  { type: 'line', spk: 'subject', text: '혼잣말 아니에요. 통화한 거예요.' },
+  { type: 'line', spk: 'interrogator', text: '누구랑요?' },
+  { type: 'line', spk: 'subject', text: '…친구요.' },
+  { type: 'line', spk: 'interrogator', text: '성함이?' },
+  { type: 'line', spk: 'subject', text: '이름은 기억 안 나요. SNS로만 알던 사이라.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'interrogator', text: '<span class="tr-redact">■■■</span>씨, 혹시 — 프사이 지구의 본인을 만난 적 있으세요?' },
+  { type: 'memo', text: '(약 6초 침묵.)' },
+  { type: 'line', spk: 'subject', text: '…아니요.' },
+  { type: 'line', spk: 'interrogator', text: '확실해요?' },
+  { type: 'line', spk: 'subject', text: '…네.' },
+  { type: 'line', spk: 'interrogator', text: '저 거울은 왜 깨진 거죠.' },
+  { type: 'line', spk: 'subject', text: '…떨어뜨렸어요.' },
+  { type: 'line', spk: 'observer', text: '거울이 벽에 박혀 있는데요.' },
+  { type: 'line', spk: 'subject', text: '…던졌어요. 그러니까. 던진 게 맞아요.' },
+  { type: 'line', spk: 'interrogator', text: '왜요?' },
+  { type: 'line', spk: 'subject', text: '거울 속에서 자꾸 — 다른 표정을 짓길래요.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'subject', text: '저는 평생 — 거짓말로 살아왔어요.' },
+  { type: 'line', spk: 'subject', text: 'SNS도, 사진도, 직업도, 학력도, 가족 얘기도. 다 거짓말이에요.' },
+  { type: 'line', spk: 'interrogator', text: '…' },
+  { type: 'line', spk: 'subject', text: '그게 너무 자연스러워서, 어느 순간부터는 진짜인 줄 알았어요.' },
+  { type: 'line', spk: 'subject', text: '근데 — 어제, 거울 속의 제가 다른 말을 하기 시작했어요.' },
+  { type: 'line', spk: 'interrogator', text: '뭐라고요?' },
+  { type: 'line', spk: 'subject', text: '"진짜 너는 누구야"라고요.' },
+  { type: 'memo', text: '(피조사자가 떨기 시작함.)' },
+  { type: 'line', spk: 'subject', text: '대답을 못 했어요. 한 마디도.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'observer', text: '저, 팀장님. 저거 — 등 쪽이 좀…' },
+  { type: 'line', spk: 'interrogator', text: '<span class="tr-redact">■■■</span>씨, 천천히 일어나서 이쪽으로 와주세요.' },
+  { type: 'line', spk: 'subject', text: '…저는 거짓말을 못 하게 됐어요.' },
+  { type: 'line', spk: 'subject', text: '몸에서 뭔가가 — 자꾸 나오려고 해요.' },
+  { type: 'memo', text: '(피조사자 등 부위 의복이 찢어지는 소리.)' },
+  { type: 'line', spk: 'observer', text: '뭐야 — 뭐야 저거!' },
+  { type: 'line', spk: 'interrogator', text: '전원 후퇴! 후퇴!' },
+
+  { type: 'pause' },
+
+  { type: 'memo', text: '(가구 넘어지는 소리. 강한 기류 발생.)' },
+  { type: 'memo', text: '(요원 한 명의 외침. "벽에 — 벽에 박혔어 —")' },
+  { type: 'glitch', text: '▓▓▓▓▓ 바디캠 손상 · 약 00:23 ▓▓▓▓▓' },
+  { type: 'memo', text: '(대형 물체가 공간을 가르는 소리. 날갯짓으로 추정.)' },
+  { type: 'line', spk: 'subject', text: '…미안해요.' },
+  { type: 'line', spk: 'subject', text: '거짓말하는 게 제일 쉬웠어요.' },
+  { type: 'line', spk: 'subject', text: '진짜가 되는 건 너무 아파요.' },
+  { type: 'glitch', text: '▓▓▓▓▓ 바디캠 손상 · 약 00:38 ▓▓▓▓▓' },
+  { type: 'memo', text: '(창문 깨지는 소리. 대상자가 창밖으로 이탈한 것으로 추정.)' },
+
+  { type: 'end', text: '— 바디캠 손상, 녹음 종료 —' },
+
+  // 괴물 분류 정보 (시저 암호 포함)
+  { type: 'break', text: '— 특수개체 분류 정보 —' },
+  { type: 'memo', text: '분류번호: STORY01' },
+  { type: 'memo', text: '위험도: 물리계 · 극상' },
+  { type: 'memo', text: '특징: 대형 날개를 통한 강타, 거짓 노출 시 각성' },
+  { type: 'memo', text: '격리상태: 탈주 · 전국 수배 중' },
+  { type: 'memo', text: '관련개체: OFWVJYPZF02 (시프트 +7)' },
+];
+
+// ========== CASE #04 — 위선자 남자 → HYPOCRISY02 실험 기록 ==========
+const TRANSCRIPT_CASE4 = [
+  { type: 'start', text: '— 실험 녹음 시작 / 1회차 —' },
+
+  { type: 'line', spk: 'meta', text: '일시: 2026년 4월 24일 오전 9시' },
+  { type: 'line', spk: 'meta', text: '장소: 합일사건 공동대응본부 격리시설 B-7' },
+  { type: 'line', spk: 'meta', text: '대상: 특수개체 HYPOCRISY02 (전(前) <span class="tr-redact">███</span>, 35세·남)' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'supervisor', text: 'B-7 격리시설. 1차 인지 실험 시작합니다.' },
+  { type: 'line', spk: 'supervisor', text: '피험자는 본부 자원 2인, 연구원 2인. 전원 격리벽 너머에 위치.' },
+  { type: 'line', spk: 'researcher', text: '피험자 A 준비 완료.' },
+  { type: 'line', spk: 'researcher', text: '음성 채널 연결합니다.' },
+  { type: 'memo', text: '(스피커 연결 신호음.)' },
+  { type: 'line', spk: 'supervisor', text: '대상에게 묻겠습니다. 들립니까.' },
+  { type: 'line', spk: 'creature', text: '네. 잘 들립니다.' },
+  { type: 'line', spk: 'supervisor', text: '본인의 이름과 현재 상태를 진술해주세요.' },
+  { type: 'line', spk: 'creature', text: '…이름은 의미 없어요. 어차피 다 거짓이었으니까.' },
+  { type: 'line', spk: 'creature', text: '저는 그냥 — 좋은 사람으로 보이고 싶었던 사람이에요.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'supervisor', text: '피험자 A, 시작하세요.' },
+  { type: 'line', spk: 'subject_a', text: '…안녕하세요.' },
+  { type: 'line', spk: 'creature', text: '안녕하세요.' },
+  { type: 'line', spk: 'subject_a', text: '저는, 그쪽이 어떻게 그렇게 됐는지 — 그게 궁금해서요.' },
+  { type: 'line', spk: 'creature', text: '저도 처음에는 몰랐어요.' },
+  { type: 'line', spk: 'creature', text: '그런데 — 그쪽도, 사실은 알고 계시잖아요.' },
+  { type: 'line', spk: 'subject_a', text: '뭘요.' },
+  { type: 'line', spk: 'creature', text: '오늘 아침에, 옆자리 동료가 인사했을 때 — 속으로 뭐라고 하셨어요?' },
+  { type: 'memo', text: '(피험자 A 약 6초간 침묵.)' },
+  { type: 'line', spk: 'subject_a', text: '…' },
+  { type: 'line', spk: 'creature', text: '"꺼져"라고 하셨죠.' },
+  { type: 'line', spk: 'subject_a', text: '…그걸 어떻게.' },
+  { type: 'line', spk: 'creature', text: '저는 모르죠. 그쪽이 그렇게 생각하신 거잖아요.' },
+  { type: 'line', spk: 'supervisor', text: '피험자 A, 진정하세요. 격벽 너머의 진술입니다.' },
+  { type: 'line', spk: 'subject_a', text: '…죄송합니다. 잠시만요.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'supervisor', text: '2회차로 진행합니다. 피험자 B.' },
+  { type: 'line', spk: 'subject_b', text: '…저는 질문 안 받을게요. 그냥 들을게요.' },
+  { type: 'line', spk: 'creature', text: '그것도 좋아요. 저는 혼자서도 말할 수 있어요.' },
+  { type: 'line', spk: 'creature', text: '예를 들면 — 그쪽이 작년에, 동생한테 했던 말이요.' },
+  { type: 'line', spk: 'subject_b', text: '…뭐요.' },
+  { type: 'line', spk: 'creature', text: '"네가 죽으면 차라리 편할 것 같아."' },
+  { type: 'memo', text: '(피험자 B의 의자 끄는 소리.)' },
+  { type: 'line', spk: 'subject_b', text: '저는 그런 말 한 적 없어요.' },
+  { type: 'line', spk: 'creature', text: '말은 안 했죠. 생각만 하셨으니까.' },
+  { type: 'line', spk: 'subject_b', text: '…' },
+  { type: 'line', spk: 'creature', text: '근데 그게 더 나빠요. 안 그래요?' },
+  { type: 'line', spk: 'supervisor', text: '피험자 B, 호흡 안정시키세요. 잠시 휴식하겠습니다.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'supervisor', text: '3회차. 연구원 C 진행합니다.' },
+  { type: 'line', spk: 'researcher_c', text: '대상자에게 직접 묻겠습니다. 본인이 어떻게 변했다고 인지하십니까.' },
+  { type: 'line', spk: 'creature', text: '저는 변하지 않았어요.' },
+  { type: 'line', spk: 'creature', text: '원래 이런 사람이었는데, 잘 숨겼던 것뿐이에요.' },
+  { type: 'line', spk: 'researcher_c', text: '구체적으로요.' },
+  { type: 'line', spk: 'creature', text: '저는 봉사단체 회장이었고, 모범 사원이었고, 좋은 아들이었어요.' },
+  { type: 'line', spk: 'creature', text: '근데 다 — 사람들이 보는 앞에서만 그랬어요.' },
+  { type: 'line', spk: 'creature', text: '집에서는, 어머니께 한 번도 따뜻한 말을 한 적이 없어요.' },
+  { type: 'line', spk: 'creature', text: '봉사단체 후원금도, 일부 — 제가 썼어요.' },
+  { type: 'line', spk: 'researcher_c', text: '…그걸 왜 지금 진술하시는 겁니까.' },
+  { type: 'line', spk: 'creature', text: '왜냐면 — 이제 숨길 수가 없거든요.' },
+  { type: 'line', spk: 'creature', text: '연구원님도 마찬가지예요.' },
+  { type: 'line', spk: 'researcher_c', text: '…' },
+  { type: 'line', spk: 'creature', text: '오늘 아침에 화장실에서 — 거울 보면서 무슨 생각 하셨어요?' },
+  { type: 'memo', text: '(연구원 C, 약 10초 무응답.)' },
+  { type: 'line', spk: 'researcher_c', text: '…감독관님, 잠시 자리 좀.' },
+  { type: 'line', spk: 'supervisor', text: '나가셔도 됩니다.' },
+
+  { type: 'pause' },
+
+  { type: 'line', spk: 'supervisor', text: '4회차. 마지막 시도입니다. 피험자 A 재투입.' },
+  { type: 'line', spk: 'subject_a', text: '…저 다시 들어가도 돼요. 괜찮아요.' },
+  { type: 'line', spk: 'creature', text: '오셨네요.' },
+  { type: 'line', spk: 'subject_a', text: '저한테 더 할 말 있으세요?' },
+  { type: 'line', spk: 'creature', text: '아뇨. 저는 다 했어요.' },
+  { type: 'line', spk: 'creature', text: '이제 그쪽이 본인한테 말할 차례예요.' },
+  { type: 'memo', text: '(약 20초간의 침묵.)' },
+  { type: 'memo', text: '(피험자 A의 작은 흐느낌.)' },
+  { type: 'line', spk: 'subject_a', text: '…저는, 사람들이 저를 좋아하는 게 — 진심인 줄 알았어요.' },
+  { type: 'line', spk: 'subject_a', text: '근데 다 — 제가 만든 가짜 모습을 좋아한 거였어요.' },
+  { type: 'line', spk: 'subject_a', text: '진짜 저는 — 아무도 몰라요. 저도요.' },
+  { type: 'line', spk: 'creature', text: '…이제 아셨네요.' },
+
+  { type: 'pause' },
+
+  { type: 'memo', text: '(약 5초의 정적.)' },
+  { type: 'memo', text: '(피험자 A의 짧은 숨소리. 이후 외마디 외침.)' },
+  { type: 'glitch', text: '▓▓▓▓▓ 음성 손상 · 약 00:08 ▓▓▓▓▓' },
+  { type: 'line', spk: 'supervisor', text: '의무팀 호출! 피험자 A, 의무팀 즉시 호출!' },
+  { type: 'line', spk: 'creature', text: '…보셨죠.' },
+  { type: 'line', spk: 'creature', text: '저는 아무것도 안 했어요. 그냥 말만 했을 뿐이에요.' },
+  { type: 'line', spk: 'supervisor', text: '실험 전면 중단. HYPOCRISY02 격리 등급 상향.' },
+  { type: 'line', spk: 'supervisor', text: '본 실험 시리즈 전면 폐기 건의.' },
+  { type: 'line', spk: 'creature', text: '…안녕히 가세요. 또 뵐 거예요.' },
+
+  { type: 'end', text: '— 실험 시리즈 최종 종료 —' },
+];
+
+// 케이스별 스크립트 매핑
+const TRANSCRIPTS = {
+  1: TRANSCRIPT_CASE1,
+  2: TRANSCRIPT_CASE2,
+  3: TRANSCRIPT_CASE3,
+  4: TRANSCRIPT_CASE4,
+};
+
+
 
 // ============================================================
 // 엔진
@@ -2043,10 +2542,16 @@ const TRANSCRIPT = [
 
 const TR_STATE_KEY = 'tr_case01_state_v2';
 let trIndex = 0;
+let trCurrentCase = 1;
+let trCurrentScript = TRANSCRIPT_CASE1;
 
-function openGameScreen() {
+function openGameScreen(caseNum = 1) {
+  trCurrentCase = caseNum;
+  trCurrentScript = TRANSCRIPTS[caseNum] || TRANSCRIPT_CASE1;
   document.getElementById('game-screen').classList.add('active');
   window.scrollTo(0, 0);
+
+  renderHeader(caseNum);
 
   const body = document.getElementById('trBody');
   const ending = document.getElementById('trEnding');
@@ -2056,6 +2561,34 @@ function openGameScreen() {
   advance.classList.remove('show');
   trIndex = 0;
   advanceTranscript();
+}
+
+function renderHeader(caseNum) {
+  const meta = CASE_META[caseNum];
+  if (!meta) return;
+  // 동적으로 헤더 정보 갱신
+  const header = document.querySelector('#game-screen .tr-header');
+  if (!header) return;
+  header.innerHTML = `
+    <div class="tr-classification">
+      <span class="tr-cls-tag">CONFIDENTIAL</span>
+      <span class="tr-cls-code">${meta.code}</span>
+    </div>
+    <h1 class="tr-title">${meta.title}</h1>
+    <div class="tr-subtitle">${meta.subtitle}</div>
+
+    <div class="tr-meta">
+      <div class="tr-meta-row"><span class="tr-meta-key">사건번호</span><span class="tr-meta-val">${meta.code}</span></div>
+      <div class="tr-meta-row"><span class="tr-meta-key">분류</span><span class="tr-meta-val">재림(再臨) 사건 관련 증거자료</span></div>
+      <div class="tr-meta-row"><span class="tr-meta-key">출처</span><span class="tr-meta-val">${meta.source}</span></div>
+      <div class="tr-meta-row"><span class="tr-meta-key">원본</span><span class="tr-meta-val">${meta.original}</span></div>
+      <div class="tr-meta-row"><span class="tr-meta-key">전사</span><span class="tr-meta-val">자동 전사 후 인적 검수 완료</span></div>
+      <div class="tr-meta-row"><span class="tr-meta-key">관련인물</span><span class="tr-meta-val">${meta.persons}</span></div>
+      <div class="tr-meta-row"><span class="tr-meta-key">비고</span><span class="tr-meta-val">${meta.note}</span></div>
+    </div>
+
+    <div class="tr-warning">${meta.warning}</div>
+  `;
 }
 
 function renderLine(line, animate = true) {
@@ -2114,8 +2647,8 @@ function advanceTranscript() {
   advance.classList.remove('show');
 
   // 'pause'까지 렌더링
-  while (trIndex < TRANSCRIPT.length) {
-    const line = TRANSCRIPT[trIndex++];
+  while (trIndex < trCurrentScript.length) {
+    const line = trCurrentScript[trIndex++];
     if (line.type === 'pause') {
       // 다음 pause 전까지 렌더 끝냄 → 버튼 노출
       showAdvanceIfNeeded();
@@ -2131,7 +2664,7 @@ function advanceTranscript() {
 
 function showAdvanceIfNeeded() {
   // 아직 남은 내용이 있으면 버튼 표시
-  if (trIndex < TRANSCRIPT.length) {
+  if (trIndex < trCurrentScript.length) {
     document.getElementById('trAdvance').classList.add('show');
   } else {
     showEnding();
@@ -2147,46 +2680,156 @@ function scrollToBottom() {
 function showEnding() {
   const ending = document.getElementById('trEnding');
   const block = document.getElementById('trEndingBlock');
-  block.innerHTML = `
-    <div class="finding-row">
-      <span class="finding-key">사건일시</span>
-      <span class="finding-val">2026년 4월 18일 오전 (추정)</span>
-    </div>
-    <div class="finding-row">
-      <span class="finding-key">사건장소</span>
-      <span class="finding-val"><span class="tr-redact">███</span>시 <span class="tr-redact">███</span>구 <span class="tr-redact">██████</span></span>
-    </div>
-    <div class="finding-row">
-      <span class="finding-key">박연우(Ω)</span>
-      <span class="finding-val deceased">사망 · 현장 사인 조사 중</span>
-    </div>
-    <div class="finding-row">
-      <span class="finding-key">박연우(Ψ)</span>
-      <span class="finding-val survived">생존 · 신병 확보 후 참고인 조사 진행</span>
-    </div>
-    <div class="finding-row">
-      <span class="finding-key"><span class="tr-redact">■■■</span>(A양)</span>
-      <span class="finding-val">생존 · 1차 참고인 조사 1회 후 추가 진술 거부</span>
-    </div>
-    <div class="finding-row">
-      <span class="finding-key">수사상황</span>
-      <span class="finding-val">박연우(Ψ) — 정당방위 주장 / 현장 물증 및 본 전사본을 근거로 현재 불기소 방향 검토 중</span>
-    </div>
-    <div class="finding-row">
-      <span class="finding-key">재림 전 유의</span>
-      <span class="finding-val">재림(再臨) 시각은 <strong>2026년 5월 5일 00:00 KST</strong>이며, 박연우(Ω)의 사망에도 불구하고 박연우(Ψ)는 본 시점 이후 소실 가능성이 존재한다. 본 사건의 최종 처분은 재림 이후 본부 재심의로 확정될 예정.</span>
-    </div>
-
-    <div class="closing-note">
-      ※ <span class="tr-redact">■■■</span>(A양)과 박연우(Ψ)는 <strong>1차 조사 이후 동일 주소지에 함께 체류 중</strong>인 것으로 확인된다.<br>
-      ※ 본 관계의 성격에 관해서는 양측 모두 어떠한 진술도 거부하고 있으며, 본부는 이에 대한 판단을 보류한다.<br>
-      ※ 이웃 및 지인 진술에 따르면, 두 사람은 "자매" 또는 "친구"로 소개되고 있으나, 공식 기록상 혈연 관계는 없다.
-    </div>
-
-    <div class="stamp-line">
-      — 합일사건 공동대응본부 · JRB-C-0417-001 / CSF-01 · 재림 전 임시 보고 · 열람등급 제한 —
-    </div>
-  `;
+  
+  if (trCurrentCase === 1) {
+    // 케이스1: 박연우 사건
+    block.innerHTML = `
+      <div class="finding-row">
+        <span class="finding-key">사건일시</span>
+        <span class="finding-val">2026년 4월 18일 오전 (추정)</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">사건장소</span>
+        <span class="finding-val"><span class="tr-redact">███</span>시 <span class="tr-redact">███</span>구 <span class="tr-redact">██████</span></span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">박연우(Ω)</span>
+        <span class="finding-val deceased">사망 · 현장 사인 조사 중</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">박연우(Ψ)</span>
+        <span class="finding-val survived">생존 · 신병 확보 후 참고인 조사 진행</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key"><span class="tr-redact">■■■</span>(A양)</span>
+        <span class="finding-val">생존 · 1차 참고인 조사 1회 후 추가 진술 거부</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">수사상황</span>
+        <span class="finding-val">박연우(Ψ) — 정당방위 주장 / 현장 물증 및 본 전사본을 근거로 현재 불기소 방향 검토 중</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">재림 전 유의</span>
+        <span class="finding-val">재림(再臨) 시각은 <strong>2026년 5월 5일 00:00 KST</strong>이며, 박연우(Ω)의 사망에도 불구하고 박연우(Ψ)는 본 시점 이후 소실 가능성이 존재한다. 본 사건의 최종 처분은 재림 이후 본부 재심의로 확정될 예정.</span>
+      </div>
+      <div class="closing-note">
+        ※ <span class="tr-redact">■■■</span>(A양)과 박연우(Ψ)는 <strong>1차 조사 이후 동일 주소지에 함께 체류 중</strong>인 것으로 확인된다.<br>
+        ※ 본 관계의 성격에 관해서는 양측 모두 어떠한 진술도 거부하고 있으며, 본부는 이에 대한 판단을 보류한다.<br>
+        ※ 이웃 및 지인 진술에 따르면, 두 사람은 "자매" 또는 "친구"로 소개되고 있으나, 공식 기록상 혈연 관계는 없다.
+      </div>
+      <div class="stamp-line">
+        — 합일사건 공동대응본부 · JRB-C-0417-001 / CSF-01 · 재림 전 임시 보고 · 열람등급 제한 —
+      </div>
+    `;
+  } else if (trCurrentCase === 2) {
+    // 케이스2: A양 심문 → TRACE00 괴물 출현
+    block.innerHTML = `
+      <div class="finding-row">
+        <span class="finding-key">사건일시</span>
+        <span class="finding-val">2026년 4월 21일 오전 10:14</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">사건장소</span>
+        <span class="finding-val">합일사건 공동대응본부 · 제3심문실</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key"><span class="tr-redact">■■■</span>(A양)</span>
+        <span class="finding-val deceased">특수개체 <strong>TRACE00</strong>으로 전환 · 접촉 금지</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">담당 심문관</span>
+        <span class="finding-val deceased">정신 붕괴 · 현재 치료 중 (회복 불투명)</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">괴물 분류</span>
+        <span class="finding-val">정신계 / 접근 시 즉시 정신 붕괴 유발 / 세부 정보 [<strong>기밀</strong>]</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">격리 상태</span>
+        <span class="finding-val">현재 B-9 구역 격리 중 · 모든 접촉 무기한 금지</span>
+      </div>
+      <div class="closing-note">
+        ※ <strong>TRACE00</strong>은 기존 인간 개체에서 급격히 전환된 사례로, 전환 조건은 현재 조사 중이다.<br>
+        ※ 유사 사례 발생 시 즉시 본부로 신고하되, <strong>절대 직접 접촉하지 말 것</strong>.
+      </div>
+      <div class="stamp-line">
+        — 합일사건 공동대응본부 · JRB-C-0421-002 / CSF-02 · 재림 전 긴급 보고 · 최고기밀 —
+      </div>
+    `;
+  } else if (trCurrentCase === 3) {
+    // 케이스3: 거짓말쟁이 여자 → STORY01 괴물
+    block.innerHTML = `
+      <div class="finding-row">
+        <span class="finding-key">사건일시</span>
+        <span class="finding-val">2026년 4월 20일 오후 3시경</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">사건장소</span>
+        <span class="finding-val"><span class="tr-redact">██</span>구 <span class="tr-redact">███████</span> 카페 및 주변</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key"><span class="tr-redact">█정██</span>(28세·여)</span>
+        <span class="finding-val deceased">특수개체 <strong>STORY01</strong>로 전환 후 도주</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">피해 상황</span>
+        <span class="finding-val deceased">민간인 3명 사망, 7명 중상 · 물리적 공격에 의한 피해</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">괴물 분류</span>
+        <span class="finding-val">물리계 / 거대 날개를 통한 강력한 타격 / 인간형 유지</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">수색 상태</span>
+        <span class="finding-val survived">현재 행방불명 · 전국 수배 중 · 목격 시 즉시 신고</span>
+      </div>
+      <div class="closing-note">
+        ※ <strong>STORY01</strong>은 자신의 거짓된 삶이 드러난 충격으로 전환된 것으로 추정된다.<br>
+        ※ 평소 완벽한 외모를 유지하려 강박적 노력을 기울였으며, SNS상 허위 정보 다수 게시.<br>
+        ※ <strong>일반 화기로는 제압 불가능</strong> — 발견 시 피난 우선.
+      </div>
+      <div class="stamp-line">
+        — 합일사건 공동대응본부 · JRB-C-0420-003 / CSF-03 · 재림 전 긴급 경보 · 공개등급 —
+      </div>
+    `;
+  } else if (trCurrentCase === 4) {
+    // 케이스4: HYPOCRISY02 실험 기록
+    block.innerHTML = `
+      <div class="finding-row">
+        <span class="finding-key">실험 기간</span>
+        <span class="finding-val">2026년 4월 19일~22일 (4일간)</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">실험 장소</span>
+        <span class="finding-val">본부 B-7 격리 구역</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key"><span class="tr-redact">███</span>(35세·남)</span>
+        <span class="finding-val">특수개체 <strong>HYPOCRISY02</strong> · 격리 수감 중</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">실험 피험자</span>
+        <span class="finding-val deceased">총 12명 참여 · 9명 정신 이상 · 1명 자살 · 2명 회복</span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">괴물 분류</span>
+        <span class="finding-val">인지계 / 환각·거짓 유도를 통한 정신 조작 / 접촉 위험도 <strong>극상</strong></span>
+      </div>
+      <div class="finding-row">
+        <span class="finding-key">실험 종료</span>
+        <span class="finding-val">추가 피해 방지를 위해 모든 실험 중단 · 격리 등급 상향</span>
+      </div>
+      <div class="closing-note">
+        ※ <strong>HYPOCRISY02</strong>는 위선적 삶을 지속하던 중 자신의 모순이 드러나며 전환된 것으로 분석.<br>
+        ※ 피험자들은 대화 중 자신의 위선과 거짓을 자각하게 되어 스스로 무너짐.<br>
+        ※ 향후 유사 개체 연구는 <strong>원격 관찰로만 제한</strong>.
+      </div>
+      <div class="stamp-line">
+        — 합일사건 공동대응본부 · JRB-C-0422-004 / CSF-04 · 재림 전 실험 종료 보고 · 최고기밀 —
+      </div>
+    `;
+  }
+  
   ending.classList.add('show');
   scrollToBottom();
 }
@@ -2224,7 +2867,48 @@ document.querySelectorAll('.nav-inner a').forEach(a => {
     }
   });
 });
+
+// ============================================================
+// ⚡ 서버 습격 글리치 연출
+// ============================================================
+
+function startGlitchAttack() {
+  const overlay = document.getElementById('glitchOverlay');
+  const cmdWindow = document.getElementById('cmdWindow');
+  
+  // 1단계: 글리치 오버레이 표시
+  overlay.classList.add('active');
+  
+  // 2단계: 2초 후 CMD 창 등장
+  setTimeout(() => {
+    cmdWindow.classList.add('show');
+  }, 2000);
+  
+  // 3단계: 8초 후 자동 복구 (WHATISLOVE..? 충분히 보이도록)
+  setTimeout(() => {
+    endGlitchAttack();
+  }, 8000);
+}
+
+function endGlitchAttack() {
+  const overlay = document.getElementById('glitchOverlay');
+  const cmdWindow = document.getElementById('cmdWindow');
+  
+  // 화면 깜빡임 효과
+  overlay.style.opacity = '0.5';
+  setTimeout(() => overlay.style.opacity = '1', 100);
+  setTimeout(() => overlay.style.opacity = '0.3', 200);
+  setTimeout(() => overlay.style.opacity = '1', 300);
+  
+  // 복구 완료
+  setTimeout(() => {
+    overlay.classList.remove('active');
+    cmdWindow.classList.remove('show');
+    overlay.style.opacity = '1'; // 리셋
+  }, 800);
+}
+
 </script>
 
 </body>
-</html>
+  </html>

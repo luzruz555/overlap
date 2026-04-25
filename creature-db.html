@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>특수개체 통합관리 데이터베이스 · [기밀]</title>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --ink: #e8e4d8;
+  --muted: #7a7668;
+  --line: #2a2824;
+  --accent: #c83c3c;
+  --omega: #d4a056;
+  --psi: #5a8cd4;
+  --font-serif: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  
+  /* 위험도 색상 */
+  --rank-sp: #8B0000;
+  --rank-s: #ff3333;
+  --rank-ap: #ff6633;
+  --rank-a: #ff9933;
+  --rank-bp: #ffcc33;
+  --rank-b: #ffee66;
+  --rank-cp: #99cc66;
+  --rank-c: #66cc99;
+  --rank-dp: #66aacc;
+  --rank-d: #6699cc;
+  --rank-dm: #d4af37; /* D- 골드 */
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 노이즈 배경 */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: 
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.015) 3px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 글리치 스캔라인 */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(200,60,60,0.03) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+  animation: scan 8s linear infinite;
+}
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.wrapper {
+  position: relative;
+  z-index: 3;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+}
+
+/* 경고 배너 */
+.warn-banner {
+  background: var(--accent);
+  color: #fff;
+  padding: 0.8rem 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: warn-blink 2s infinite;
+  border: 2px solid #8B0000;
+}
+@keyframes warn-blink {
+  0%, 90% { opacity: 1; }
+  95% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* 헤더 */
+header {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+header h1 {
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  margin: 0 0 0.4rem;
+  color: var(--ink);
+}
+header .sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+}
+header .doc-no {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+/* 알림 섹션 */
+.notice {
+  background: rgba(200, 60, 60, 0.08);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.2rem;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.notice strong { color: var(--accent); }
+
+/* 위험도 범례 */
+.legend {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--line);
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+}
+.legend-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-bottom: 0.8rem;
+}
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+}
+.rank-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border-radius: 2px;
+  min-width: 32px;
+  text-align: center;
+  color: #000;
+}
+.rank-sp { background: var(--rank-sp); color: #fff; }
+.rank-s { background: var(--rank-s); color: #fff; }
+.rank-ap { background: var(--rank-ap); color: #000; }
+.rank-a { background: var(--rank-a); color: #000; }
+.rank-bp { background: var(--rank-bp); color: #000; }
+.rank-b { background: var(--rank-b); color: #000; }
+.rank-cp { background: var(--rank-cp); color: #000; }
+.rank-c { background: var(--rank-c); color: #000; }
+.rank-dp { background: var(--rank-dp); color: #000; }
+.rank-d { background: var(--rank-d); color: #fff; }
+.rank-dm { background: var(--rank-dm); color: #000; }
+
+/* 필터 */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* 크리쳐 목록 */
+.creature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.creature-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--line);
+  padding: 1.2rem;
+  position: relative;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.creature-card:hover {
+  border-color: var(--ink);
+  background: rgba(255,255,255,0.04);
+}
+.creature-card.classified {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.creature-card.classified:hover {
+  border-color: var(--line);
+  background: rgba(255,255,255,0.02);
+}
+
+.creature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+.creature-code {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.creature-name {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+  font-style: italic;
+}
+.creature-type {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.creature-type .tag {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--line);
+  margin-right: 0.3rem;
+}
+.creature-desc {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-top: 0.5rem;
+}
+.creature-classified-text {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 1rem 0;
+  letter-spacing: 0.1em;
+}
+
+/* 공개 크리쳐 상세 정보 */
+.creature-card.public {
+  border-color: rgba(255, 238, 102, 0.3);
+  background: rgba(255, 238, 102, 0.02);
+}
+.creature-card.public:hover {
+  border-color: rgba(255, 238, 102, 0.6);
+  background: rgba(255, 238, 102, 0.04);
+}
+.creature-card.name-only {
+  cursor: default;
+}
+
+.creature-details {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--line);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+.detail-row {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px dotted rgba(255,255,255,0.05);
+}
+.detail-row:last-of-type { border-bottom: none; }
+.detail-key {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-top: 0.1rem;
+}
+.detail-val {
+  color: var(--ink);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.detail-note {
+  margin-top: 0.8rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(200, 60, 60, 0.06);
+  border-left: 2px solid var(--accent);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* 리다크션 */
+.redact {
+  background: #1a1a1a;
+  color: #1a1a1a;
+  padding: 0 0.2em;
+  user-select: none;
+  letter-spacing: 0;
+}
+
+/* ============ Q&A 게시판 ============ */
+
+.qna-section {
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 3px double var(--line);
+}
+
+.qna-header {
+  margin-bottom: 2rem;
+}
+.qna-header h2 {
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+  margin: 0 0 0.5rem;
+}
+.qna-header .sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.qna-warning {
+  background: rgba(200, 60, 60, 0.08);
+  border: 1px solid var(--accent);
+  padding: 1rem 1.2rem;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  line-height: 1.8;
+}
+.qna-warning strong { color: var(--accent); }
+
+/* 질문 폼 */
+.qna-form {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--line);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.qna-form-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+.qna-form label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.1em;
+}
+.qna-form input,
+.qna-form textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.6rem 0.8rem;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  transition: border 0.2s;
+}
+.qna-form textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: var(--font-serif);
+  line-height: 1.6;
+}
+.qna-form input:focus,
+.qna-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.qna-submit {
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 700;
+}
+.qna-submit:hover, .qna-submit:active {
+  background: var(--accent);
+}
+.qna-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.qna-msg {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  margin-top: 0.8rem;
+  min-height: 1rem;
+}
+.qna-msg.ok { color: #6f9e6a; }
+.qna-msg.error { color: var(--accent); }
+
+/* Q&A 목록 */
+.qna-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.qna-item {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--line);
+  padding: 1.5rem;
+  position: relative;
+}
+
+.qna-item::before {
+  content: '※ 접수 №';
+  position: absolute;
+  top: -0.6rem; left: 1rem;
+  background: var(--bg);
+  padding: 0 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.qna-q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.8rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px dashed var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.qna-nickname { color: var(--ink); font-weight: 700; }
+.qna-date { color: var(--muted); }
+
+.qna-q {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--muted);
+  color: var(--ink);
+}
+.qna-q::before {
+  content: 'Q. ';
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.qna-a {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  padding: 1rem 1.2rem;
+  background: rgba(200, 60, 60, 0.04);
+  border-left: 3px solid var(--accent);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  position: relative;
+}
+.qna-a::before {
+  content: 'A. [분류미상 · 자료[검열]]';
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.qna-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+}
+
+/* 상단 컨트롤 */
+.top-controls {
+  position: fixed;
+  top: 1rem; right: 1rem;
+  z-index: 100;
+  display: flex;
+  gap: 0.5rem;
+}
+.ctrl-btn {
+  background: rgba(0,0,0,0.8);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.5rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+.ctrl-btn:hover, .ctrl-btn:active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* 모바일 */
+@media (max-width: 700px) {
+  .wrapper { padding: 1.5rem 1rem 4rem; }
+  header h1 { font-size: 1.2rem; }
+  .creature-grid { grid-template-columns: 1fr; }
+  .legend-grid { grid-template-columns: repeat(2, 1fr); }
+  .filters { font-size: 0.7rem; }
+  .filter-btn { padding: 0.4rem 0.7rem; font-size: 0.7rem; }
+  .qna-q-header { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- 상단 컨트롤 -->
+<div class="top-controls">
+  <button class="ctrl-btn" onclick="window.close()">× CLOSE</button>
+</div>
+
+<div class="wrapper">
+
+  <!-- 경고 배너 -->
+  <div class="warn-banner">
+    ⚠ 비공식 접근 감지됨 · 본 데이터베이스는 공개되지 않은 내부 문서입니다 ⚠
+  </div>
+
+  <!-- 헤더 -->
+  <header>
+    <h1>특수개체 통합관리 데이터베이스</h1>
+    <div class="sub">INTEGRATED CRYPTID REGISTRY · JRB-CDB-2026</div>
+    <div class="doc-no">문서번호: JRB-INT-DB-0428 · 최종갱신: 2026.04.23 14:22 · 열람권한: Ω-5 / Ψ-5 이상</div>
+  </header>
+
+  <!-- 알림 -->
+  <div class="notice">
+    <strong>※ 열람시 유의사항 ※</strong><br>
+    본 데이터베이스는 합일사건(Union) 발생 이후 양 지구에서 관측된 특수개체(Cryptid)를 통합 관리합니다.
+    <strong class="redact">■■</strong>월 <strong class="redact">■■</strong>일 기준 총 <strong>28건</strong>의 개체가 등록되어 있으며,
+    그 중 <strong>3건</strong>만 상세정보가 공개되어 있고 <strong>25건</strong>은 이름만 공개 상태입니다. 본 문서 열람 사실은 본부 감사국에 자동 통보됩니다.
+  </div>
+
+  <!-- 위험도 범례 -->
+  <div class="legend">
+    <div class="legend-title">※ 위험도 분류 체계 · THREAT RANK SYSTEM ※</div>
+    <div class="legend-grid">
+      <div class="legend-item"><span class="rank-badge rank-sp">S+</span>지구멸망급</div>
+      <div class="legend-item"><span class="rank-badge rank-s">S</span>국가붕괴급</div>
+      <div class="legend-item"><span class="rank-badge rank-ap">A+</span>대량학살급</div>
+      <div class="legend-item"><span class="rank-badge rank-a">A</span>고위험</div>
+      <div class="legend-item"><span class="rank-badge rank-bp">B+</span>위험</div>
+      <div class="legend-item"><span class="rank-badge rank-b">B</span>중위험</div>
+      <div class="legend-item"><span class="rank-badge rank-cp">C+</span>주의</div>
+      <div class="legend-item"><span class="rank-badge rank-c">C</span>경계</div>
+      <div class="legend-item"><span class="rank-badge rank-dp">D+</span>관찰</div>
+      <div class="legend-item"><span class="rank-badge rank-d">D</span>안전</div>
+      <div class="legend-item"><span class="rank-badge rank-dm">D-</span>완전안전</div>
+    </div>
+  </div>
+
+  <!-- 필터 -->
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">전체</button>
+    <button class="filter-btn" data-filter="public">상세공개</button>
+    <button class="filter-btn" data-filter="classified">이름만</button>
+    <button class="filter-btn" data-filter="sp">S+</button>
+    <button class="filter-btn" data-filter="s">S급</button>
+    <button class="filter-btn" data-filter="a">A급</button>
+    <button class="filter-btn" data-filter="b">B급</button>
+    <button class="filter-btn" data-filter="c">C급</button>
+    <button class="filter-btn" data-filter="d">D급</button>
+  </div>
+
+  <!-- 크리쳐 목록 -->
+  <div class="creature-grid" id="creatureGrid"></div>
+
+  <!-- ============ Q&A 게시판 ============ -->
+  <div class="qna-section">
+    <div class="qna-header">
+      <h2>※ 공개등급 외 · 비공식 민원 게시판 ※</h2>
+      <div class="sub">UNOFFICIAL INQUIRY BOARD · STATUS UNDETERMINED</div>
+    </div>
+
+    <div class="qna-warning">
+      <strong>※ 본 게시판은 공식 창구가 아닙니다.</strong><br>
+      본 게시판은 <strong>[분류미상 · 자료[검열]]</strong> 개체가 임의로 응답하고 있는 것으로 확인되며,<br>
+      본부는 해당 응답의 정확성 및 안전성을 <strong>보증하지 않습니다</strong>.<br>
+      본 게시판 이용 시 발생하는 모든 영향은 <strong>이용자 책임</strong>입니다.
+    </div>
+
+    <!-- 질문 폼 -->
+    <div class="qna-form">
+      <div class="qna-form-title">▶ 민원 접수 · INQUIRY FORM</div>
+      <label for="qnaNick">닉네임 / NICKNAME</label>
+      <input type="text" id="qnaNick" maxlength="20" placeholder="익명 가능 (최대 20자)" autocomplete="off">
+      
+      <label for="qnaQuestion">문의내용 / INQUIRY CONTENT</label>
+      <textarea id="qnaQuestion" maxlength="500" placeholder="무엇이든 물어보십시오. 응답 여부는 보장되지 않습니다. (최대 500자)"></textarea>
+      
+      <button class="qna-submit" id="qnaSubmitBtn">▶ 접수 · SUBMIT</button>
+      <div class="qna-msg" id="qnaMsg"></div>
+    </div>
+
+    <!-- Q&A 목록 -->
+    <div class="qna-list" id="qnaList">
+      <div class="qna-empty">— 데이터 불러오는 중 —</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// 크리쳐 데이터 (28개 전체)
+// ============================================================
+
+const CREATURES = [
+  // S+ (1개) — 이름만 공개
+  { 
+    code: 'GIFT26', name: '선물', rank: 'sp', 
+    type: ['분류미상'], status: 'name-only',
+    desc: ''
+  },
+  
+  // S (2개) — 이름만 공개
+  { code: 'AWAKE24', name: '불면', rank: 's', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'CROWD16', name: '군중', rank: 's', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // A+ (2개) — 이름만 공개
+  { code: 'VESSEL10', name: '그릇', rank: 'ap', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'MEMORY14', name: '기억', rank: 'ap', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // A (2개) — 이름만 공개
+  { code: 'THORN08', name: '가시', rank: 'a', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'WEIGHT09', name: '무게', rank: 'a', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // B+ (5개) — STORY01, HYPOCRISY02는 상세공개
+  { 
+    code: 'STORY01', name: '이야기', rank: 'bp', 
+    type: ['물리계', '비행', '각성형'], status: 'public',
+    discovered: '2026.04.20',
+    origin: '<span class="redact">█정██</span>(26세·여) · 거짓말로 점철된 삶을 살던 중 자신의 진실을 마주하며 전환',
+    ability: '대형 날개(추정 날개 길이 약 4m)를 통한 강력한 물리적 타격. 비행 가능.',
+    threat: '민간인 3명 사망, 7명 중상(2026.04.20 현장). 일반 화기로 제압 불가능.',
+    containment: '현재 탈주 중 · 전국 수배 · 목격 시 즉시 112 또는 본부 긴급회선으로 신고.',
+    note: '대상자는 비행 중에도 인간형 외형을 유지하며 대화가 가능한 것으로 보고됨.'
+  },
+  { 
+    code: 'HYPOCRISY02', name: '위선', rank: 'bp', 
+    type: ['인지계', '언어', '원격'], status: 'public',
+    discovered: '2026.04.19',
+    origin: '<span class="redact">███</span>(35세·남) · 장기간 위선적 삶을 지속하던 중 자신의 모순을 자각하며 전환',
+    ability: '대상의 숨겨진 심리·기억을 "듣는" 능력. 청자로 하여금 자신의 위선과 거짓을 스스로 자각하게 하여 정신 붕괴 유도.',
+    threat: '실험 피험자 12명 중 9명 정신 이상, 1명 자살. 격벽 너머에서의 음성 접촉만으로도 유효.',
+    containment: 'B-7 격리 구역 수감 중 · 음성 접촉 완전 차단 · 원격 관찰로만 제한.',
+    note: '대상자는 자발적으로 수용되었으며, 연구원과의 대화 시 극도로 공손하고 차분한 태도를 보인다. 그러나 이 "공손함" 자체가 위험 요소로 분류된다.'
+  },
+  { code: 'MIRROR05', name: '거울', rank: 'bp', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'LOOP06', name: '되풀이', rank: 'bp', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'PAIN25', name: '통증', rank: 'bp', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // B (5개) — TRACE00만 상세공개
+  { 
+    code: 'TRACE00', name: '흔적', rank: 'b', 
+    type: ['정신계', '근접', '격리가능'], status: 'public',
+    discovered: '2026.04.21',
+    origin: '<span class="redact">■■■</span>(A양·28세·여) · 프사이 지구에 대응 평행자아가 존재하지 않는 것으로 확인된 개체. 재심문 과정에서 전환.',
+    ability: '근접 시 청각적 환청 유발 ("심장 소리" 등). 직접 접촉 시 대상의 정신 즉시 붕괴.',
+    threat: '심문관 1명 정신 붕괴(치료 중·회복 불투명). 현재까지 격리 구역 외부 피해 없음.',
+    containment: 'B-9 격리 구역 수감 중 · 모든 접촉 무기한 금지 · 영상 관측만 허용.',
+    note: '대상자는 전환 이후에도 일반적인 대화가 가능하나, 대화 중 간헐적으로 "제3자"의 목소리를 사용한다. 해당 목소리의 정체는 <span class="redact">[검열]</span>.'
+  },
+  { code: 'ECHO03', name: '메아리', rank: 'b', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'SMILE11', name: '미소', rank: 'b', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'DELAY20', name: '지체', rank: 'b', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'SHORTCUT21', name: '지름길', rank: 'b', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // C+ (3개) — 이름만 공개
+  { code: 'FACADE04', name: '외형', rank: 'cp', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'SILENCE07', name: '침묵', rank: 'cp', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'STILL22', name: '정지', rank: 'cp', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // C (3개) — 이름만 공개
+  { code: 'PROMISE13', name: '약속', rank: 'c', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'NAME12', name: '이름', rank: 'c', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'FRIEND17', name: '친구', rank: 'c', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // D+ (3개) — 이름만 공개
+  { code: 'GHOST18', name: '잔상', rank: 'dp', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'FAMILY19', name: '가족', rank: 'dp', type: ['분류미상'], status: 'name-only', desc: '' },
+  { code: 'CHILD27', name: '아이', rank: 'dp', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // D (1개) — 이름만 공개
+  { code: 'APPETITE23', name: '식욕', rank: 'd', type: ['분류미상'], status: 'name-only', desc: '' },
+  
+  // D- (1개) — 이름만 공개
+  { code: 'DEBT15', name: '빚', rank: 'dm', type: ['분류미상'], status: 'name-only', desc: '' },
+];
+
+// ============================================================
+// 크리쳐 렌더링
+// ============================================================
+
+function renderCreatures(filter = 'all') {
+  const grid = document.getElementById('creatureGrid');
+  let filtered = CREATURES;
+  
+  if (filter === 'public') filtered = CREATURES.filter(c => c.status === 'public');
+  else if (filter === 'classified') filtered = CREATURES.filter(c => c.status === 'name-only');
+  else if (filter === 'sp') filtered = CREATURES.filter(c => c.rank === 'sp');
+  else if (filter === 's') filtered = CREATURES.filter(c => c.rank === 's');
+  else if (filter === 'a') filtered = CREATURES.filter(c => ['ap', 'a'].includes(c.rank));
+  else if (filter === 'b') filtered = CREATURES.filter(c => ['bp', 'b'].includes(c.rank));
+  else if (filter === 'c') filtered = CREATURES.filter(c => ['cp', 'c'].includes(c.rank));
+  else if (filter === 'd') filtered = CREATURES.filter(c => ['dp', 'd', 'dm'].includes(c.rank));
+  
+  const rankLabel = {
+    sp: 'S+', s: 'S', ap: 'A+', a: 'A',
+    bp: 'B+', b: 'B', cp: 'C+', c: 'C',
+    dp: 'D+', d: 'D', dm: 'D-'
+  };
+  
+  grid.innerHTML = filtered.map(c => {
+    const isPublic = c.status === 'public';
+    const typeTags = c.type.map(t => `<span class="tag">${t}</span>`).join('');
+    
+    if (isPublic) {
+      // 공개 크리쳐: 전체 상세 정보
+      return `
+        <div class="creature-card public" data-rank="${c.rank}">
+          <div class="creature-header">
+            <div class="creature-code">${c.code}</div>
+            <div class="rank-badge rank-${c.rank}">${rankLabel[c.rank]}</div>
+          </div>
+          <div class="creature-name">"${c.name}"</div>
+          <div class="creature-type">${typeTags}</div>
+          <div class="creature-details">
+            <div class="detail-row"><span class="detail-key">발견일</span><span class="detail-val">${c.discovered}</span></div>
+            <div class="detail-row"><span class="detail-key">대상원</span><span class="detail-val">${c.origin}</span></div>
+            <div class="detail-row"><span class="detail-key">능력</span><span class="detail-val">${c.ability}</span></div>
+            <div class="detail-row"><span class="detail-key">피해</span><span class="detail-val">${c.threat}</span></div>
+            <div class="detail-row"><span class="detail-key">수용상태</span><span class="detail-val">${c.containment}</span></div>
+            <div class="detail-note">※ ${c.note}</div>
+          </div>
+        </div>
+      `;
+    } else {
+      // 이름만 공개: 코드 + 이름 + 등급만
+      return `
+        <div class="creature-card name-only" data-rank="${c.rank}">
+          <div class="creature-header">
+            <div class="creature-code">${c.code}</div>
+            <div class="rank-badge rank-${c.rank}">${rankLabel[c.rank]}</div>
+          </div>
+          <div class="creature-name">"${c.name}"</div>
+          <div class="creature-classified-text">▓ 상세정보 열람권한 부족 ▓</div>
+        </div>
+      `;
+    }
+  }).join('');
+}
+
+// 필터 버튼
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCreatures(btn.dataset.filter);
+  });
+});
+
+// 초기 렌더
+renderCreatures();
+
+// ============================================================
+// Q&A 게시판
+// ============================================================
+
+const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1496571742754439188/uNmZOmgj3es_8le9CyJVdSO5CUFB1MQ-cK6wktTT-Y3BjbNBJcDoYMZJtlUcED5gPaiW';
+
+// 제출 중복 방지 (localStorage)
+const QNA_LAST_SUBMIT = 'qna_last_submit';
+
+async function submitQuestion() {
+  const nickInput = document.getElementById('qnaNick');
+  const qInput = document.getElementById('qnaQuestion');
+  const msg = document.getElementById('qnaMsg');
+  const btn = document.getElementById('qnaSubmitBtn');
+  
+  const nickname = nickInput.value.trim();
+  const question = qInput.value.trim();
+  
+  if (!nickname) {
+    msg.textContent = '✗ 닉네임을 입력하십시오.';
+    msg.className = 'qna-msg error';
+    return;
+  }
+  if (!question || question.length < 5) {
+    msg.textContent = '✗ 문의내용은 5자 이상 입력하십시오.';
+    msg.className = 'qna-msg error';
+    return;
+  }
+  
+  // 1분 내 재제출 방지
+  const lastSubmit = parseInt(localStorage.getItem(QNA_LAST_SUBMIT) || '0');
+  if (Date.now() - lastSubmit < 60000) {
+    const remaining = Math.ceil((60000 - (Date.now() - lastSubmit)) / 1000);
+    msg.textContent = `✗ 재접수까지 ${remaining}초 대기하십시오.`;
+    msg.className = 'qna-msg error';
+    return;
+  }
+  
+  btn.disabled = true;
+  msg.textContent = '⋯ 전송 중⋯';
+  msg.className = 'qna-msg';
+  
+  try {
+    const response = await fetch(DISCORD_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        embeds: [{
+          title: '📬 새 민원 접수',
+          color: 0xc83c3c,
+          fields: [
+            { name: '닉네임', value: nickname, inline: true },
+            { name: '시각', value: new Date().toLocaleString('ko-KR'), inline: true },
+            { name: '문의내용', value: question.substring(0, 1000) }
+          ],
+          footer: { text: 'JRB-CDB · 비공식 민원 게시판' },
+          timestamp: new Date().toISOString()
+        }]
+      })
+    });
+    
+    if (response.ok) {
+      msg.textContent = '✓ 접수 완료 — 응답 여부는 보장되지 않습니다.';
+      msg.className = 'qna-msg ok';
+      nickInput.value = '';
+      qInput.value = '';
+      localStorage.setItem(QNA_LAST_SUBMIT, Date.now().toString());
+    } else {
+      throw new Error('webhook failed');
+    }
+  } catch (e) {
+    msg.textContent = '✗ 전송 실패 — 잠시 후 다시 시도하십시오.';
+    msg.className = 'qna-msg error';
+  } finally {
+    setTimeout(() => { btn.disabled = false; }, 3000);
+  }
+}
+
+document.getElementById('qnaSubmitBtn').addEventListener('click', submitQuestion);
+
+// ============================================================
+// Q&A 목록 로드 (qna.json에서)
+// ============================================================
+
+async function loadQnaList() {
+  const list = document.getElementById('qnaList');
+  
+  try {
+    const response = await fetch('qna.json?t=' + Date.now());
+    if (!response.ok) throw new Error('no data');
+    const data = await response.json();
+    
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div class="qna-empty">— 아직 답변된 민원이 없습니다 —</div>';
+      return;
+    }
+    
+    // 최신순 정렬
+    const sorted = [...data].sort((a, b) => (b.id || 0) - (a.id || 0));
+    
+    list.innerHTML = sorted.map(item => `
+      <div class="qna-item">
+        <div class="qna-q-header">
+          <div><span class="qna-nickname">${escapeHtml(item.nickname)}</span> · №${String(item.id).padStart(4, '0')}</div>
+          <div class="qna-date">${item.date || ''}</div>
+        </div>
+        <div class="qna-q">${escapeHtml(item.question)}</div>
+        <div class="qna-a">${escapeHtml(item.answer)}</div>
+      </div>
+    `).join('');
+  } catch (e) {
+    list.innerHTML = '<div class="qna-empty">— 아직 답변된 민원이 없습니다 —</div>';
+  }
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML.replace(/\n/g, '<br>');
+}
+
+loadQnaList();
+
+</script>
+
+</body>
+</html>

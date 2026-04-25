@@ -1844,17 +1844,27 @@ const loginMsg = document.getElementById('loginMsg');
 
 async function tryLogin() {
   const val = loginInput.value.trim();
-  if (!val) { loginMsg.textContent = '비밀번호를 입력하십시오.'; loginMsg.className = 'login-msg error'; return; }
-  const h = await sha256(val);
-  if (h === HASHES.login) {
-    loginMsg.textContent = '✓ 인증 완료 — 추가 권한은 곧 공개됩니다.';
-    loginMsg.className = 'login-msg ok';
-    loginInput.value = ''; loginInput.disabled = true; loginBtn.disabled = true;
-    loginBtn.textContent = 'AUTHENTICATED';
-  } else {
-    loginMsg.textContent = '✗ 인증 실패 — 권한 없음';
-    loginMsg.className = 'login-msg error';
+  if (!val) { 
+    loginMsg.textContent = '비밀번호를 입력하십시오.'; 
+    loginMsg.className = 'login-msg error'; 
+    return; 
   }
+  
+  // 입력값 무관하게 크리쳐 DB 새 창 열기 (ARG 연출)
+  loginMsg.textContent = '✓ 비정상 접근 감지 — 외부 시스템 리디렉트 중…';
+  loginMsg.className = 'login-msg ok';
+  loginInput.value = '';
+  
+  // 1.5초 뒤 새 창 열기 (글리치 효과 느낌)
+  setTimeout(() => {
+    window.open('creature-db.html', '_blank');
+    loginMsg.textContent = '✗ 연결 강제 리디렉트됨';
+    loginMsg.className = 'login-msg error';
+    setTimeout(() => {
+      loginMsg.textContent = '';
+      loginInput.disabled = false;
+    }, 2000);
+  }, 1500);
 }
 loginBtn.addEventListener('click', tryLogin);
 loginInput.addEventListener('keypress', e => { if (e.key === 'Enter') tryLogin(); });
@@ -2911,4 +2921,4 @@ function endGlitchAttack() {
 </script>
 
 </body>
-  </html>
+</html>

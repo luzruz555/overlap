@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KEEPER · Internal Admin</title>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --panel: #141414;
+  --ink: #e8e4d8;
+  --muted: #7a7668;
+  --line: #2a2824;
+  --accent: #c83c3c;
+  --ok: #6f9e6a;
+  --warn: #d4a056;
+  --font-serif: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* 노이즈 */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.015) 3px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.container { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* ============ 로그인 화면 ============ */
+
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+.login-box {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 2.5rem;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+}
+.login-box::before {
+  content: '● KEEPER / INTERNAL ADMIN ●';
+  position: absolute;
+  top: -0.6rem; left: 1rem;
+  background: var(--bg);
+  padding: 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+}
+.login-box h1 {
+  font-size: 1.2rem;
+  letter-spacing: 0.15em;
+  margin: 0 0 0.3rem;
+  color: var(--ink);
+}
+.login-box .sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin-bottom: 2rem;
+}
+.login-box label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.1em;
+}
+.login-box input {
+  width: 100%;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.8rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.2rem;
+}
+.login-box input:focus { outline: none; border-color: var(--accent); }
+.login-box button {
+  width: 100%;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  padding: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.login-box button:hover, .login-box button:active { background: var(--accent); color: #fff; }
+.login-msg {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  margin-top: 1rem;
+  min-height: 1rem;
+  letter-spacing: 0.04em;
+}
+.login-msg.error { color: var(--accent); }
+.login-msg.ok { color: var(--ok); }
+
+/* ============ 관리자 메인 ============ */
+
+.admin-main { display: none; }
+.admin-main.active { display: block; }
+
+.admin-header {
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 1.2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.admin-title h1 {
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+  margin: 0 0 0.3rem;
+}
+.admin-title .sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 700;
+}
+.btn:hover { background: var(--ink); color: var(--bg); }
+.btn.primary { background: var(--ok); color: #fff; border-color: var(--ok); }
+.btn.primary:hover { background: #5a8555; border-color: #5a8555; }
+.btn.danger { color: var(--accent); border-color: var(--accent); }
+.btn.danger:hover { background: var(--accent); color: #fff; }
+.btn.warn { color: var(--warn); border-color: var(--warn); }
+.btn.warn:hover { background: var(--warn); color: var(--bg); }
+
+/* 통계 */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 1rem 1.2rem;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.4rem;
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.stat-card.accent .stat-value { color: var(--accent); }
+.stat-card.ok .stat-value { color: var(--ok); }
+.stat-card.warn .stat-value { color: var(--warn); }
+
+/* 패널 */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed var(--line);
+}
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* 새 Q&A 작성 폼 */
+.form-row { margin-bottom: 1rem; }
+.form-row label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.1em;
+}
+.form-row input,
+.form-row textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.6rem 0.8rem;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.form-row textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.form-row input:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.form-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 700px) {
+  .form-row-two { grid-template-columns: 1fr; }
+}
+
+/* 템플릿 */
+.templates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dotted var(--line);
+}
+.tmpl-btn {
+  background: transparent;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  padding: 0.3rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tmpl-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  border-style: solid;
+}
+.tmpl-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-right: 0.5rem;
+  align-self: center;
+}
+
+/* Q&A 리스트 */
+.qna-list { display: flex; flex-direction: column; gap: 1rem; }
+.qna-row {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 1.2rem;
+  position: relative;
+}
+.qna-row.editing {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.qna-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px dotted var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.qna-id {
+  color: var(--muted);
+  font-weight: 700;
+}
+.qna-meta {
+  color: var(--ink);
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.qna-nick { color: var(--ink); font-weight: 700; }
+.qna-date { color: var(--muted); }
+.qna-row-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.btn-sm {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+}
+
+.qna-row-q {
+  font-size: 0.88rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(255,255,255,0.02);
+  border-left: 2px solid var(--muted);
+  margin-bottom: 0.6rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.qna-row-q::before { content: 'Q. '; font-family: var(--font-mono); color: var(--muted); font-weight: 700; }
+
+.qna-row-a {
+  font-size: 0.88rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(200, 60, 60, 0.05);
+  border-left: 2px solid var(--accent);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.qna-row-a::before { content: 'A. '; font-family: var(--font-mono); color: var(--accent); font-weight: 700; }
+
+.qna-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+}
+
+/* 편집 모드 */
+.edit-fields {
+  margin-top: 0.5rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--line);
+}
+
+/* JSON 출력 패널 */
+.json-output {
+  background: #000;
+  border: 1px solid var(--line);
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ok);
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+/* 알림 */
+.toast {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  background: var(--ok);
+  color: #fff;
+  padding: 0.8rem 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  z-index: 1000;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s;
+  font-weight: 700;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.error { background: var(--accent); }
+.toast.warn { background: var(--warn); color: var(--bg); }
+
+/* 가이드 박스 */
+.guide {
+  background: rgba(255, 238, 102, 0.05);
+  border-left: 3px solid var(--warn);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.guide strong { color: var(--warn); }
+.guide code {
+  background: rgba(0,0,0,0.5);
+  padding: 0.1rem 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  border: 1px solid var(--line);
+}
+
+/* 탭 */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  padding: 0.8rem 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 700;
+}
+.tab-btn.active {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* 상단 퀵 액션 플로팅 */
+.floating-actions {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.floating-btn {
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  padding: 0.8rem 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  transition: all 0.2s;
+}
+.floating-btn:hover { background: var(--accent); color: #fff; }
+.floating-btn.primary { background: var(--ok); color: #fff; }
+.floating-btn.primary:hover { background: #5a8555; }
+
+/* 파일 입력 숨김 */
+.hidden-input { display: none; }
+
+@media (max-width: 700px) {
+  .container { padding: 1rem; }
+  .admin-header { flex-direction: column; align-items: flex-start; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stat-value { font-size: 1.4rem; }
+  .panel { padding: 1rem; }
+  .floating-actions { bottom: 1rem; right: 1rem; }
+  .floating-btn { padding: 0.6rem 0.9rem; font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 로그인 화면 ============ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>KEEPER · 관리자 인증</h1>
+    <div class="sub">INTERNAL ADMIN · JRB-KEEPER-01</div>
+    
+    <div class="form-row">
+      <label>ACCESS KEY</label>
+      <input type="password" id="loginPw" autocomplete="off" placeholder="관리자 비밀번호">
+    </div>
+    
+    <button id="loginBtn">▶ 인증 · AUTHENTICATE</button>
+    <div class="login-msg" id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- ============ 관리자 메인 ============ -->
+<div class="admin-main" id="adminMain">
+  <div class="container">
+    
+    <!-- 헤더 -->
+    <div class="admin-header">
+      <div class="admin-title">
+        <h1>※ Q&A 민원 관리 시스템 ※</h1>
+        <div class="sub">KEEPER INTERNAL · QNA ADMIN CONSOLE</div>
+      </div>
+      <div class="admin-actions">
+        <button class="btn" id="logoutBtn">🚪 로그아웃</button>
+      </div>
+    </div>
+
+    <!-- 통계 -->
+    <div class="stats">
+      <div class="stat-card"><div class="stat-label">TOTAL Q&A</div><div class="stat-value" id="stat-total">0</div></div>
+      <div class="stat-card ok"><div class="stat-label">PUBLISHED</div><div class="stat-value" id="stat-published">0</div></div>
+      <div class="stat-card warn"><div class="stat-label">DRAFT</div><div class="stat-value" id="stat-draft">0</div></div>
+      <div class="stat-card accent"><div class="stat-label">LAST EDIT</div><div class="stat-value" id="stat-lastedit" style="font-size: 0.9rem; line-height: 1.3;">-</div></div>
+    </div>
+
+    <!-- 가이드 -->
+    <div class="guide">
+      <strong>📘 사용 가이드</strong><br>
+      1. <strong>새 Q&A 작성</strong>: 디스코드에서 받은 질문 → 아래 폼에 입력 → "추가"<br>
+      2. <strong>편집/삭제</strong>: 각 Q&A 항목의 "편집" / "삭제" 버튼<br>
+      3. <strong>배포</strong>: 우측하단 <code>JSON 복사</code> → GitHub의 <code>qna.json</code> 파일에 붙여넣기 → 커밋<br>
+      4. <strong>자동 저장</strong>: 작업 중 변경사항은 브라우저에 자동 저장됩니다. 새로고침해도 유지됩니다.
+    </div>
+
+    <!-- 탭 -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="write">➕ 새 Q&A</button>
+      <button class="tab-btn" data-tab="list">📋 목록 (<span id="tabListCount">0</span>)</button>
+      <button class="tab-btn" data-tab="json">📤 JSON 내보내기</button>
+      <button class="tab-btn" data-tab="import">📥 JSON 불러오기</button>
+    </div>
+
+    <!-- 탭: 새 Q&A 작성 -->
+    <div class="tab-content active" id="tab-write">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">▶ 새 민원 작성</div>
+        </div>
+
+        <div class="form-row-two">
+          <div>
+            <label>닉네임 / NICKNAME</label>
+            <input type="text" id="newNick" placeholder="디코에서 받은 닉네임" maxlength="20">
+          </div>
+          <div>
+            <label>날짜 / DATE</label>
+            <input type="text" id="newDate" placeholder="YYYY-MM-DD">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <label>질문 / QUESTION</label>
+          <textarea id="newQ" placeholder="디코에서 받은 질문 내용 붙여넣기"></textarea>
+        </div>
+        
+        <div class="form-row">
+          <label>답변 / ANSWER (크리쳐 말투)</label>
+          <textarea id="newA" placeholder="답변 작성..." style="min-height: 120px;"></textarea>
+          
+          <div class="templates">
+            <span class="tmpl-label">빠른 삽입:</span>
+            <button class="tmpl-btn" data-tmpl="...당신도 곧 알게 될 거예요.">곧 알게 될 거예요</button>
+            <button class="tmpl-btn" data-tmpl="...그건 제가 답해드릴 수 없어요.">답할 수 없어요</button>
+            <button class="tmpl-btn" data-tmpl="…들으셨어요? 저는 이미 알고 있었어요.">이미 알고 있었어요</button>
+            <button class="tmpl-btn" data-tmpl="…다시 물어봐 주세요. 이번엔 조금 다르게요.">다시 물어봐 주세요</button>
+            <button class="tmpl-btn" data-tmpl="...[답변 보류 · 상급 기관 이첩]">상급 이첩</button>
+            <button class="tmpl-btn" data-tmpl="— 또 오세요.">또 오세요</button>
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn primary" id="addQnaBtn">＋ Q&A 추가</button>
+          <button class="btn" id="clearFormBtn">초기화</button>
+          <button class="btn warn" id="previewBtn">👁 미리보기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 탭: 목록 -->
+    <div class="tab-content" id="tab-list">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">▶ Q&A 목록 (최신순)</div>
+          <div style="display: flex; gap: 0.4rem;">
+            <button class="btn btn-sm danger" id="deleteAllBtn">⚠ 전체삭제</button>
+          </div>
+        </div>
+        <div class="qna-list" id="qnaList">
+          <div class="qna-empty">— 아직 등록된 Q&A가 없습니다 —</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 탭: JSON 내보내기 -->
+    <div class="tab-content" id="tab-json">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">▶ JSON 내보내기</div>
+          <div style="display: flex; gap: 0.4rem;">
+            <button class="btn primary" id="copyJsonBtn">📋 클립보드 복사</button>
+            <button class="btn" id="downloadJsonBtn">💾 파일 다운로드</button>
+            <button class="btn" id="refreshJsonBtn">🔄 갱신</button>
+          </div>
+        </div>
+        <div class="guide" style="margin-bottom: 1rem;">
+          아래 JSON을 복사해서 GitHub의 <code>qna.json</code> 파일에 <strong>전체 덮어쓰기</strong>로 붙여넣으세요. 
+          커밋하면 자동 배포됩니다.
+        </div>
+        <div class="json-output" id="jsonOutput">[]</div>
+      </div>
+    </div>
+
+    <!-- 탭: JSON 불러오기 -->
+    <div class="tab-content" id="tab-import">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">▶ JSON 불러오기</div>
+        </div>
+        <div class="guide" style="margin-bottom: 1rem;">
+          기존 <code>qna.json</code> 내용을 불러와서 이어서 편집하려면:<br>
+          1. GitHub에서 <code>qna.json</code> 내용 복사<br>
+          2. 아래 textarea에 붙여넣기<br>
+          3. "불러오기" 클릭 → 기존 Q&A 전부 로드됨
+        </div>
+        <div class="form-row">
+          <label>JSON 텍스트 붙여넣기</label>
+          <textarea id="importJson" placeholder='[{"id":1,"nickname":"...","question":"...","answer":"...","date":"..."}]' style="min-height: 200px; font-family: var(--font-mono); font-size: 0.85rem;"></textarea>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn warn" id="importJsonBtn">📥 불러오기 (기존 데이터 대체)</button>
+          <button class="btn" id="mergeJsonBtn">＋ 병합 (기존에 추가)</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 플로팅 액션 -->
+  <div class="floating-actions">
+    <button class="floating-btn primary" id="floatCopyBtn">📋 JSON 복사</button>
+  </div>
+</div>
+
+<!-- 토스트 -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// 상수
+// ============================================================
+
+const PW_HASH = '8d384ebef5dec3656c23550f8d203bf40988f2581c4e2ae7b54c82c15e4cdc6f'; // luzruz555
+const SESSION_KEY = 'keeper_session';
+const QNA_STORAGE_KEY = 'keeper_qna_draft';
+const SESSION_DURATION = 3600 * 1000 * 4; // 4시간
+
+// ============================================================
+// SHA-256
+// ============================================================
+
+async function sha256(text) {
+  const buffer = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// ============================================================
+// 세션 관리
+// ============================================================
+
+function checkSession() {
+  try {
+    const session = JSON.parse(localStorage.getItem(SESSION_KEY));
+    if (session && session.expires > Date.now()) {
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+function createSession() {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({
+    expires: Date.now() + SESSION_DURATION
+  }));
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+// ============================================================
+// 로그인
+// ============================================================
+
+const loginScreen = document.getElementById('loginScreen');
+const adminMain = document.getElementById('adminMain');
+const loginPw = document.getElementById('loginPw');
+const loginBtn = document.getElementById('loginBtn');
+const loginMsg = document.getElementById('loginMsg');
+
+async function tryLogin() {
+  const val = loginPw.value.trim();
+  if (!val) {
+    loginMsg.textContent = '비밀번호를 입력하십시오.';
+    loginMsg.className = 'login-msg error';
+    return;
+  }
+  
+  loginMsg.textContent = '⋯ 인증 중⋯';
+  loginMsg.className = 'login-msg';
+  
+  const h = await sha256(val);
+  if (h === PW_HASH) {
+    loginMsg.textContent = '✓ 인증 완료';
+    loginMsg.className = 'login-msg ok';
+    createSession();
+    setTimeout(() => enterAdmin(), 400);
+  } else {
+    loginMsg.textContent = '✗ 인증 실패';
+    loginMsg.className = 'login-msg error';
+    loginPw.value = '';
+  }
+}
+
+function enterAdmin() {
+  loginScreen.style.display = 'none';
+  adminMain.classList.add('active');
+  initAdmin();
+}
+
+function logout() {
+  clearSession();
+  location.reload();
+}
+
+loginBtn.addEventListener('click', tryLogin);
+loginPw.addEventListener('keypress', e => { if (e.key === 'Enter') tryLogin(); });
+document.getElementById('logoutBtn').addEventListener('click', logout);
+
+// 세션 체크 (자동 로그인)
+if (checkSession()) {
+  enterAdmin();
+}
+
+// ============================================================
+// Q&A 데이터 관리
+// ============================================================
+
+let qnaData = [];
+let editingId = null;
+
+function loadDraft() {
+  try {
+    const draft = localStorage.getItem(QNA_STORAGE_KEY);
+    if (draft) {
+      qnaData = JSON.parse(draft);
+    }
+  } catch (e) { qnaData = []; }
+}
+
+function saveDraft() {
+  localStorage.setItem(QNA_STORAGE_KEY, JSON.stringify(qnaData));
+  localStorage.setItem('keeper_last_edit', new Date().toLocaleString('ko-KR'));
+}
+
+function getNextId() {
+  if (qnaData.length === 0) return 1;
+  return Math.max(...qnaData.map(q => q.id)) + 1;
+}
+
+function getTodayDate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// ============================================================
+// 초기화
+// ============================================================
+
+function initAdmin() {
+  loadDraft();
+  
+  // 오늘 날짜 자동
+  document.getElementById('newDate').value = getTodayDate();
+  
+  renderAll();
+  updateStats();
+  renderJson();
+}
+
+// ============================================================
+// 렌더링
+// ============================================================
+
+function renderAll() {
+  renderQnaList();
+  updateStats();
+  renderJson();
+  saveDraft();
+}
+
+function renderQnaList() {
+  const list = document.getElementById('qnaList');
+  
+  if (qnaData.length === 0) {
+    list.innerHTML = '<div class="qna-empty">— 아직 등록된 Q&A가 없습니다 —</div>';
+    document.getElementById('tabListCount').textContent = '0';
+    return;
+  }
+  
+  document.getElementById('tabListCount').textContent = qnaData.length;
+  
+  // 최신순
+  const sorted = [...qnaData].sort((a, b) => b.id - a.id);
+  
+  list.innerHTML = sorted.map(item => {
+    const isEditing = editingId === item.id;
+    
+    if (isEditing) {
+      return `
+        <div class="qna-row editing">
+          <div class="qna-row-header">
+            <div class="qna-id">№${String(item.id).padStart(4, '0')} · 편집 중</div>
+            <div class="qna-row-actions">
+              <button class="btn btn-sm primary" onclick="saveEdit(${item.id})">💾 저장</button>
+              <button class="btn btn-sm" onclick="cancelEdit()">취소</button>
+            </div>
+          </div>
+          <div class="edit-fields">
+            <div class="form-row-two">
+              <div>
+                <label>닉네임</label>
+                <input type="text" id="edit-nick-${item.id}" value="${escapeAttr(item.nickname)}" maxlength="20">
+              </div>
+              <div>
+                <label>날짜</label>
+                <input type="text" id="edit-date-${item.id}" value="${escapeAttr(item.date)}">
+              </div>
+            </div>
+            <div class="form-row">
+              <label>질문</label>
+              <textarea id="edit-q-${item.id}">${escapeHtml(item.question)}</textarea>
+            </div>
+            <div class="form-row">
+              <label>답변</label>
+              <textarea id="edit-a-${item.id}" style="min-height: 120px;">${escapeHtml(item.answer)}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    return `
+      <div class="qna-row">
+        <div class="qna-row-header">
+          <div class="qna-id">№${String(item.id).padStart(4, '0')}</div>
+          <div class="qna-meta">
+            <span class="qna-nick">${escapeHtml(item.nickname)}</span>
+            <span class="qna-date">${escapeHtml(item.date)}</span>
+          </div>
+          <div class="qna-row-actions">
+            <button class="btn btn-sm" onclick="startEdit(${item.id})">✏ 편집</button>
+            <button class="btn btn-sm danger" onclick="deleteQna(${item.id})">🗑 삭제</button>
+          </div>
+        </div>
+        <div class="qna-row-q">${escapeHtml(item.question)}</div>
+        <div class="qna-row-a">${escapeHtml(item.answer)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = qnaData.length;
+  document.getElementById('stat-published').textContent = qnaData.length;
+  document.getElementById('stat-draft').textContent = '0';
+  
+  const lastEdit = localStorage.getItem('keeper_last_edit') || '-';
+  document.getElementById('stat-lastedit').textContent = lastEdit;
+}
+
+function renderJson() {
+  const sorted = [...qnaData].sort((a, b) => a.id - b.id);
+  const json = JSON.stringify(sorted, null, 2);
+  document.getElementById('jsonOutput').textContent = json;
+}
+
+// ============================================================
+// CRUD
+// ============================================================
+
+function addQna() {
+  const nickname = document.getElementById('newNick').value.trim();
+  const date = document.getElementById('newDate').value.trim();
+  const question = document.getElementById('newQ').value.trim();
+  const answer = document.getElementById('newA').value.trim();
+  
+  if (!nickname) { showToast('닉네임을 입력하십시오', 'error'); return; }
+  if (!date) { showToast('날짜를 입력하십시오', 'error'); return; }
+  if (!question) { showToast('질문을 입력하십시오', 'error'); return; }
+  if (!answer) { showToast('답변을 입력하십시오', 'error'); return; }
+  
+  qnaData.push({
+    id: getNextId(),
+    nickname, question, answer, date
+  });
+  
+  renderAll();
+  clearForm();
+  showToast('✓ Q&A 추가 완료', 'ok');
+  
+  // 자동으로 목록 탭으로
+  switchTab('list');
+}
+
+function clearForm() {
+  document.getElementById('newNick').value = '';
+  document.getElementById('newQ').value = '';
+  document.getElementById('newA').value = '';
+  document.getElementById('newDate').value = getTodayDate();
+}
+
+function startEdit(id) {
+  editingId = id;
+  renderQnaList();
+  // 편집 필드로 스크롤
+  setTimeout(() => {
+    document.querySelector('.qna-row.editing')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+function cancelEdit() {
+  editingId = null;
+  renderQnaList();
+}
+
+function saveEdit(id) {
+  const item = qnaData.find(q => q.id === id);
+  if (!item) return;
+  
+  item.nickname = document.getElementById(`edit-nick-${id}`).value.trim();
+  item.date = document.getElementById(`edit-date-${id}`).value.trim();
+  item.question = document.getElementById(`edit-q-${id}`).value.trim();
+  item.answer = document.getElementById(`edit-a-${id}`).value.trim();
+  
+  editingId = null;
+  renderAll();
+  showToast('✓ 수정 완료', 'ok');
+}
+
+function deleteQna(id) {
+  const item = qnaData.find(q => q.id === id);
+  if (!item) return;
+  
+  if (!confirm(`№${String(id).padStart(4,'0')} "${item.nickname}" 의 Q&A를 삭제하시겠습니까?`)) return;
+  
+  qnaData = qnaData.filter(q => q.id !== id);
+  renderAll();
+  showToast('✓ 삭제 완료', 'ok');
+}
+
+function deleteAll() {
+  if (qnaData.length === 0) { showToast('삭제할 항목이 없습니다', 'error'); return; }
+  if (!confirm(`⚠ 전체 ${qnaData.length}개의 Q&A를 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) return;
+  if (!confirm(`※ 재확인 ※\n진짜로 전부 삭제할까요?`)) return;
+  
+  qnaData = [];
+  renderAll();
+  showToast('✓ 전체 삭제 완료', 'ok');
+}
+
+// ============================================================
+// JSON 입출력
+// ============================================================
+
+function copyJson() {
+  const sorted = [...qnaData].sort((a, b) => a.id - b.id);
+  const json = JSON.stringify(sorted, null, 2);
+  
+  navigator.clipboard.writeText(json).then(() => {
+    showToast('✓ 클립보드 복사 완료 — GitHub에 붙여넣으세요', 'ok');
+  }).catch(() => {
+    // fallback
+    const textarea = document.createElement('textarea');
+    textarea.value = json;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast('✓ 복사 완료', 'ok');
+  });
+}
+
+function downloadJson() {
+  const sorted = [...qnaData].sort((a, b) => a.id - b.id);
+  const json = JSON.stringify(sorted, null, 2);
+  
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'qna.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ 파일 다운로드 완료', 'ok');
+}
+
+function importJson(merge = false) {
+  const text = document.getElementById('importJson').value.trim();
+  if (!text) { showToast('JSON을 입력하십시오', 'error'); return; }
+  
+  try {
+    const data = JSON.parse(text);
+    if (!Array.isArray(data)) throw new Error('not array');
+    
+    // 검증
+    for (const item of data) {
+      if (!item.id || !item.nickname || !item.question || !item.answer) {
+        throw new Error('필수 필드 누락');
+      }
+    }
+    
+    if (merge) {
+      // 병합: 기존 ID와 충돌하지 않게 새 ID 부여
+      const maxId = qnaData.length > 0 ? Math.max(...qnaData.map(q => q.id)) : 0;
+      const merged = data.map((item, i) => ({
+        ...item,
+        id: maxId + i + 1
+      }));
+      qnaData = [...qnaData, ...merged];
+      showToast(`✓ ${data.length}개 병합 완료`, 'ok');
+    } else {
+      if (!confirm(`기존 ${qnaData.length}개 데이터를 ${data.length}개로 덮어쓰시겠습니까?`)) return;
+      qnaData = data;
+      showToast(`✓ ${data.length}개 불러오기 완료`, 'ok');
+    }
+    
+    document.getElementById('importJson').value = '';
+    renderAll();
+    switchTab('list');
+  } catch (e) {
+    showToast('✗ JSON 형식 오류: ' + e.message, 'error');
+  }
+}
+
+// ============================================================
+// 탭
+// ============================================================
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tabName}"]`)?.classList.add('active');
+  document.getElementById(`tab-${tabName}`)?.classList.add('active');
+  
+  if (tabName === 'json') renderJson();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// ============================================================
+// 미리보기
+// ============================================================
+
+function preview() {
+  const nickname = document.getElementById('newNick').value.trim();
+  const question = document.getElementById('newQ').value.trim();
+  const answer = document.getElementById('newA').value.trim();
+  const date = document.getElementById('newDate').value.trim() || getTodayDate();
+  
+  if (!question || !answer) {
+    showToast('질문과 답변을 먼저 작성하세요', 'error');
+    return;
+  }
+  
+  const id = getNextId();
+  const html = `
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>미리보기</title>
+<style>
+body { background: #0a0a0a; color: #e8e4d8; font-family: 'Noto Serif KR', serif; padding: 2rem; max-width: 700px; margin: 0 auto; }
+.qna-item { background: rgba(255,255,255,0.02); border: 1px solid #2a2824; padding: 1.5rem; position: relative; margin-top: 2rem; }
+.qna-item::before { content: '※ 접수 №'; position: absolute; top: -0.6rem; left: 1rem; background: #0a0a0a; padding: 0 0.5rem; font-family: monospace; font-size: 0.65rem; color: #7a7668; letter-spacing: 0.1em; }
+.qna-q-header { display: flex; justify-content: space-between; padding-bottom: 0.8rem; margin-bottom: 0.8rem; border-bottom: 1px dashed #2a2824; font-family: monospace; font-size: 0.72rem; }
+.qna-nickname { font-weight: 700; }
+.qna-date { color: #7a7668; }
+.qna-q { font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.2rem; padding-left: 1rem; border-left: 2px solid #7a7668; }
+.qna-q::before { content: 'Q. '; font-family: monospace; font-weight: 700; color: #7a7668; }
+.qna-a { font-size: 0.95rem; line-height: 1.8; padding: 1rem 1.2rem; background: rgba(200, 60, 60, 0.04); border-left: 3px solid #c83c3c; }
+.qna-a::before { content: 'A. [분류미상 · 자료[검열]]'; display: block; font-family: monospace; font-size: 0.7rem; color: #c83c3c; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-weight: 700; }
+h2 { letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.head { font-family: monospace; font-size: 0.75rem; color: #7a7668; margin-bottom: 2rem; letter-spacing: 0.1em; }
+</style></head><body>
+<h2>※ 미리보기 · PREVIEW ※</h2>
+<div class="head">실제 사이트에서 이렇게 표시됩니다</div>
+<div class="qna-item">
+<div class="qna-q-header"><div><span class="qna-nickname">${escapeHtml(nickname || '(닉네임)')}</span> · №${String(id).padStart(4,'0')}</div><div class="qna-date">${escapeHtml(date)}</div></div>
+<div class="qna-q">${escapeHtml(question).replace(/\n/g, '<br>')}</div>
+<div class="qna-a">${escapeHtml(answer).replace(/\n/g, '<br>')}</div>
+</div></body></html>
+  `;
+  
+  const previewWin = window.open('', '_blank');
+  previewWin.document.write(html);
+  previewWin.document.close();
+}
+
+// ============================================================
+// 템플릿 삽입
+// ============================================================
+
+document.querySelectorAll('.tmpl-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const textarea = document.getElementById('newA');
+    const insert = btn.dataset.tmpl;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    textarea.value = textarea.value.substring(0, start) + insert + textarea.value.substring(end);
+    textarea.focus();
+    textarea.setSelectionRange(start + insert.length, start + insert.length);
+  });
+});
+
+// ============================================================
+// 유틸
+// ============================================================
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+function escapeAttr(text) {
+  if (!text) return '';
+  return text.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+let toastTimer;
+function showToast(msg, type = 'ok') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = `toast show ${type === 'error' ? 'error' : type === 'warn' ? 'warn' : ''}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// 이벤트 연결
+// ============================================================
+
+document.getElementById('addQnaBtn').addEventListener('click', addQna);
+document.getElementById('clearFormBtn').addEventListener('click', clearForm);
+document.getElementById('previewBtn').addEventListener('click', preview);
+document.getElementById('copyJsonBtn').addEventListener('click', copyJson);
+document.getElementById('downloadJsonBtn').addEventListener('click', downloadJson);
+document.getElementById('refreshJsonBtn').addEventListener('click', renderJson);
+document.getElementById('deleteAllBtn').addEventListener('click', deleteAll);
+document.getElementById('importJsonBtn').addEventListener('click', () => importJson(false));
+document.getElementById('mergeJsonBtn').addEventListener('click', () => importJson(true));
+document.getElementById('floatCopyBtn').addEventListener('click', copyJson);
+
+// 입력 중 자동 저장 안내
+['newNick', 'newQ', 'newA'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', () => {
+    localStorage.setItem('keeper_form_draft', JSON.stringify({
+      nickname: document.getElementById('newNick').value,
+      question: document.getElementById('newQ').value,
+      answer: document.getElementById('newA').value
+    }));
+  });
+});
+
+// 폼 드래프트 복원
+try {
+  const formDraft = JSON.parse(localStorage.getItem('keeper_form_draft') || '{}');
+  if (formDraft.nickname) document.getElementById('newNick').value = formDraft.nickname;
+  if (formDraft.question) document.getElementById('newQ').value = formDraft.question;
+  if (formDraft.answer) document.getElementById('newA').value = formDraft.answer;
+} catch(e) {}
+
+// 추가 성공 시 드래프트 클리어
+const origAddQna = addQna;
+addQna = function() {
+  origAddQna();
+  localStorage.removeItem('keeper_form_draft');
+};
+
+// 전역에 함수 노출 (onclick용)
+window.startEdit = startEdit;
+window.cancelEdit = cancelEdit;
+window.saveEdit = saveEdit;
+window.deleteQna = deleteQna;
+
+</script>
+
+</body>
+</html>
+
